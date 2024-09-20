@@ -163,7 +163,17 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          group = dive_number)) +
   geom_line() +
   theme(axis.text.x = element_text(angle = -30, hjust = 0))
-#this plot could use some work - the individual dives are a little hard to
+#the plot above could use some work - the individual dives are a little hard to
 #distinguish
+
+#plots the normalized count for each taxonomic level by individual dive
+#depending on number of dives, try tweaking the ncol value in the facet_wrap to
+#improve the visualization
+ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
+                                         y = normalized_count_unique,
+                                         group = dive_number)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = -30, hjust = 0)) +
+  facet_wrap(~ dive_number, ncol = 3)
 
 
