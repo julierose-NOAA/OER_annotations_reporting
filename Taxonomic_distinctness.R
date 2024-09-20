@@ -100,3 +100,15 @@ dive_number<-c(1:length(benthic_start_vector)) #assumes your dives are
 #numbered sequentially starting with 1, this code could use improvement
 
 benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
+
+#Joins the clean annotations dataframe to the benthic times dataframe 
+#and then filters the annotations data to only include the benthic portion of
+#each dive.
+
+benthic_join<-left_join(annotation_clean, benthic_times, 
+                        join_by("dive_number" == "dive_number"))
+
+benthic_annotations<- benthic_join |> 
+  group_by(dive_number) |> 
+  filter(date_time>=benthic_start & date_time<=benthic_end) |> 
+  ungroup()
