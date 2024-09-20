@@ -163,3 +163,7 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          group = dive_number)) +
   geom_line() +
   theme(axis.text.x = element_text(angle = -30, hjust = 0))
+#this plot could use some work - the individual dives are a little hard to
+#distinguish
+
+
