@@ -96,7 +96,7 @@ benthic_end_list<-map(dive_summary_paths,
 
 benthic_start<- as.POSIXct(unlist(benthic_start_list))
 benthic_end<- as.POSIXct(unlist(benthic_end_list))
-dive_number<-c(1:length(benthic_start_vector)) #assumes your dives are
+dive_number<-c(1:length(benthic_start)) #assumes your dives are
 #numbered sequentially starting with 1, this code could use improvement
 
 benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
