@@ -63,3 +63,18 @@ clean_annotation <- function(x) {
     mutate(dive_number = as.numeric(dive_number)) |> 
     filter(biota == "Biota") 
 }
+
+#Read in a group of annotation files saved locally as .csv exports from SeaTube
+#Save each file as a dataframe within a list, apply the clean function described
+#above to each dataframe within this list, then combine them into a single df
+
+annotation_paths<-list.files(
+  "C:/Users/julie.rose/Documents/1-OER/Biodiversity/annotations", 
+  pattern = "[.]csv$", full.names = TRUE)
+
+annotation_list<-map(annotation_paths, 
+                     \(x) read_csv(x, col_names = TRUE, na = ""))
+
+annotation_clean<- annotation_list |> 
+  map(clean_annotation) |> 
+  list_rbind()
