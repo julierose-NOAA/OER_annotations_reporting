@@ -78,3 +78,25 @@ annotation_list<-map(annotation_paths,
 annotation_clean<- annotation_list |> 
   map(clean_annotation) |> 
   list_rbind()
+
+#Use function described above to get start and end times for the benthic
+#portion of individual dives. Apply these functions across a group of dive 
+#summary .txt files stored locally. Create a dataframe that contains dive number
+#plus benthic start and end times for the group of dives.
+
+dive_summary_paths<-list.files(
+  "C:/Users/julie.rose/Documents/1-OER/Biodiversity/dive_summaries", 
+  pattern = "[.]txt$", full.names = TRUE)
+
+benthic_start_list<-map(dive_summary_paths, 
+                        \(x) import_benthic_start(x))
+
+benthic_end_list<-map(dive_summary_paths, 
+                      \(x) import_benthic_end(x))
+
+benthic_start<- as.POSIXct(unlist(benthic_start_list))
+benthic_end<- as.POSIXct(unlist(benthic_end_list))
+dive_number<-c(1:length(benthic_start_vector)) #assumes your dives are
+#numbered sequentially starting with 1, this code could use improvement
+
+benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
