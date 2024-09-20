@@ -4,6 +4,7 @@ library(readr)
 library(ggplot2)
 library(vegan)
 library(purrr)
+library(forcats)
 
 #The inputs for this analysis are locally stored SeaTube annotation .csv files
 #and dive summary .txt files. Each annotation needs to have its paired dive
@@ -124,3 +125,41 @@ taxonomy_count <- function(x) {
       across(phylum:species, \(x) n_distinct(x, na.rm = TRUE))
     )
 }
+
+#Pulls out just the dive number and taxonomy columns, counts the number of 
+#unique values at each taxonomic level. Added new columns that normalize the
+#counts for each taxonomic level by total number of taxa observed. This 
+#normalization helps to put all dives on a similar scale which improves the
+#visualization in the next step
+annotations_taxonomy_count <- benthic_annotations |> 
+  select("dive_number","species","genus","family","order","class","phylum") |> 
+  group_by(dive_number) |> 
+  taxonomy_count() |> 
+  rowwise() |> 
+  mutate(total_taxa = sum(species+genus+family+order+class+phylum)) |> 
+  mutate(across(phylum:species, \(x) x/total_taxa, .names = "{.col}_norm"))
+
+#rotates the normalized count dataframe and converts taxonomic level to a factor
+#for easier plotting
+annotations_taxonomy_forplot <- annotations_taxonomy_count |> 
+  select("dive_number","species_norm","genus_norm","family_norm","order_norm",
+         "class_norm","phylum_norm") |> 
+  pivot_longer(phylum_norm:species_norm) |> 
+  rename(taxonomic_level = name,
+         normalized_count_unique = value) |> 
+  mutate(taxonomic_level = as.factor(taxonomic_level),
+         dive_number = as.factor(dive_number)) |> 
+  mutate(taxonomic_level = fct_relevel(taxonomic_level, 
+                                       c("phylum_norm","class_norm",
+                                         "order_norm","family_norm",
+                                         "genus_norm","species_norm"))) #this
+#step makes the plot in the next step look nicer
+
+#plots the normalized count for each taxonomic level, with dives shown in 
+#different colors
+ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level, 
+                                         y = normalized_count_unique, 
+                                         color = dive_number, 
+                                         group = dive_number)) +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = -30, hjust = 0))
