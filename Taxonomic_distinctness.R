@@ -112,3 +112,15 @@ benthic_annotations<- benthic_join |>
   group_by(dive_number) |> 
   filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   ungroup()
+
+#------------------------------------------------------------------------------
+
+#function to calculate number of unique taxa at each taxonomic level for an
+#individual dive
+
+taxonomy_count <- function(x) { 
+  x |> 
+    summarize(
+      across(phylum:species, \(x) n_distinct(x, na.rm = TRUE))
+    )
+}
