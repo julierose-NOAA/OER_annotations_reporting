@@ -176,4 +176,34 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
   theme(axis.text.x = element_text(angle = -30, hjust = 0)) +
   facet_wrap(~ dive_number, ncol = 3)
 
+#-------------------------------------------------------------------------------
+
+#The analysis of taxonomic distinctness in the vegan package needs two input
+#files: 
+#1) a data file with abundance (can be presence/absence) of each taxa,
+#organized where individual dives are rows and taxa are columns; 
+#2) a base taxonomy input file that shows how all of the taxa in the data file 
+#are related to each other. Vegan provides the function taxa2dist to create
+#this input from a data frame, organized where row names correspond to names of 
+#individual taxa, and columns correspond to taxonomic level, from lowest to
+#highest. 
+#The taxondive function is set up to process multiple samples/dives at once, 
+#so this code should not need iteration.
+
+#this takes the combined clean annotations file and creates the base taxonomy 
+#input to use with taxa2dist. It is currently set to include family through 
+#phylum in the analysis, and can easily be modified based on the user-selected
+#taxonomic levels from the data visualizations in the code above. It extracts
+#the unique values across all dives and then converts the lowest taxonomic level
+#to rownames, which is required for the taxa2dist function. Then it runs
+#taxa2dist to create the input file for vegan (#2 above).
+
+base_taxonomy <- benthic_annotations |> 
+    select(family:phylum) |>  #modify this for different taxonomic level analysis
+    drop_na() |> 
+    distinct() |> 
+    tibble::column_to_rownames(var = "family") |> #this too
+    taxa2dist()
+
+
 
