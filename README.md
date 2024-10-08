@@ -7,6 +7,8 @@ Filters for the benthic portion of each individual dive within the group.
 
 Calculates number of unique taxa at each taxonomic level for each dive and creates visualizations, to inform taxonomic distinctness analysis.
 
-Planned: calculate taxonomic distinctness across groups of dives and generate relevant visualizations
+Calculates taxonomic distinctness across groups of dives
+
+Planned: generate relevant visualizations
 
 Planned: other biodiversity metrics
