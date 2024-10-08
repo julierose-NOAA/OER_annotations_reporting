@@ -205,5 +205,21 @@ base_taxonomy <- benthic_annotations |>
     tibble::column_to_rownames(var = "family") |> #this too
     taxa2dist()
 
+#add summary text
+dive_taxa_pivot <- benthic_annotations |> 
+  select(dive_number, phylum:family) |>  #modify this for different TL analysis
+  group_by(dive_number) |> 
+  drop_na() |> 
+  distinct() |>  
+  ungroup() |> 
+  mutate(seen = 1) |> 
+  select(dive_number, family, seen) |>  #this too
+  pivot_wider(names_from = dive_number, values_from = seen, values_fill = 0)
+  
+  
+dive_taxa <- as.data.frame(t(dive_taxa_pivot[,-1])) 
+colnames(dive_taxa) <- dive_taxa_pivot$family  #this too
 
+taxonomic_distinctness <- taxondive(dive_taxa, base_taxonomy)
 
+#add export to csv
