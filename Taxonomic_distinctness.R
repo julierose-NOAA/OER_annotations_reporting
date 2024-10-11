@@ -220,6 +220,17 @@ dive_taxa_pivot <- benthic_annotations |>
 dive_taxa <- as.data.frame(t(dive_taxa_pivot[,-1])) 
 colnames(dive_taxa) <- dive_taxa_pivot$family  #this too
 
-taxonomic_distinctness <- taxondive(dive_taxa, base_taxonomy)
+td_list <- taxondive(dive_taxa, base_taxonomy)
+
+#taxondive outputs to a list, need to convert to data frame but the vectors are
+#unequal length. Would be great to go straight to a data frame but for now first
+#converting to a matrix works ok. Don't need the expected values in the analysis
+#so for now just removing the last column of the matrix as I convert that to a
+#data frame. Ideally I'd like to make this code cleaner.
+td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE)
+td_df<- as.data.frame(td_mat[,1:7])
+colnames(td_df)<- c('Species','Delta','Delta*','Lambda+','Delta+','sd_Delta+', 
+                    'SDelta+')
+
 
 #add export to csv
