@@ -227,10 +227,9 @@ td_list <- taxondive(dive_taxa, base_taxonomy)
 #converting to a matrix works ok. Don't need the expected values in the analysis
 #so for now just removing the last column of the matrix as I convert that to a
 #data frame. Ideally I'd like to make this code cleaner.
-td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE)
+td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE) #note nrow will vary based on dive number
 td_df<- as.data.frame(td_mat[,1:7])
 colnames(td_df)<- c('Species','Delta','Delta*','Lambda+','Delta+','sd_Delta+', 
                     'SDelta+')
 
-
-#add export to csv
+write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/taxonomic_distinctness.csv")
