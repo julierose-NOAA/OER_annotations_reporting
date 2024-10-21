@@ -239,8 +239,19 @@ write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/taxonomic_dist
 
 #visualize results - number of unique taxa across dives
 ggplot(data = td_df, aes(x = dive_number, y = Species)) +
-  geom_bar(stat = "identity") +
+  geom_col() +
   labs(title = "Number of Unique Taxa", x = "Dive Number", y = "Taxa Count") +
+  scale_x_continuous(n.breaks = nrow(td_df)) +
+  geom_text(label = td_df$Species, nudge_y = 2)
+
+#visualize average taxonomic distinctness across dives
+ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus)) +
+  geom_col() +
+  labs(title = "Average Taxonomic Distinctness (Delta Plus)", x = "Dive Number",
+       y = "Delta Plus") +
   scale_x_continuous(n.breaks = nrow(td_df))
 
-
+#identify unusually low or high values that may be of interest using boxplot
+#outlier detection method
+delta_plus_out <- boxplot.stats(td_df$Delta_Plus)$out
+delta_plus_out_row <- which(td_df$Delta_Plus %in% c(delta_plus_out))
