@@ -255,3 +255,13 @@ ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus)) +
 #outlier detection method
 delta_plus_out <- boxplot.stats(td_df$Delta_Plus)$out
 delta_plus_out_row <- which(td_df$Delta_Plus %in% c(delta_plus_out))
+
+td_df <- td_df |> 
+  mutate(DeltaPlus_outlier = if_else(dive_number %in% delta_plus_out_row, TRUE, FALSE))
+
+ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus, fill = DeltaPlus_outlier)) +
+  geom_col() +
+  labs(title = "Average Taxonomic Distinctness (Delta Plus)", x = "Dive Number",
+       y = "Delta Plus", fill = "Outlier?") +
+  scale_x_continuous(n.breaks = nrow(td_df)) +
+  scale_fill_manual(values = c("#818181","#6ad5eb"))
