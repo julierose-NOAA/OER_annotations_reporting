@@ -231,5 +231,12 @@ td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE) #note nrow will vary
 td_df<- as.data.frame(td_mat[,1:7])
 colnames(td_df)<- c('Species','Delta','Delta*','Lambda+','Delta+','sd_Delta+', 
                     'SDelta+')
+td_df$dive_number <- 1:nrow(td_df) #assumes sequential dive numbering
 
 write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/taxonomic_distinctness.csv")
+
+#visualize results
+ggplot(data = td_df, aes(x = dive_number, y = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Unique Taxa", x = "Dive Number", y = "Taxa Count") +
+  scale_x_continuous(n.breaks = nrow(td_df))
