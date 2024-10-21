@@ -114,6 +114,8 @@ benthic_annotations<- benthic_join |>
   filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   ungroup()
 
+write.csv(benthic_annotations,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/benthic_annotations.csv")
+
 #------------------------------------------------------------------------------
 
 #function to calculate number of unique taxa at each taxonomic level for an
@@ -156,25 +158,34 @@ annotations_taxonomy_forplot <- annotations_taxonomy_count |>
 #step makes the plot in the next step look nicer
 
 #plots the normalized count for each taxonomic level, with dives shown in 
-#different colors
+#different colors, saves as .png
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_count_all.png")
+
 ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level, 
                                          y = normalized_count_unique, 
                                          color = dive_number, 
                                          group = dive_number)) +
   geom_line() +
   theme(axis.text.x = element_text(angle = -30, hjust = 0))
+
+dev.off()
+
 #the plot above could use some work - the individual dives are a little hard to
 #distinguish
 
 #plots the normalized count for each taxonomic level by individual dive
 #depending on number of dives, try tweaking the ncol value in the facet_wrap to
-#improve the visualization
+#improve the visualization, saves as .png
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_count_facet.png")
+
 ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          y = normalized_count_unique,
                                          group = dive_number)) +
   geom_line() +
   theme(axis.text.x = element_text(angle = -30, hjust = 0)) +
   facet_wrap(~ dive_number, ncol = 3)
+
+dev.off()
 
 #-------------------------------------------------------------------------------
 
@@ -235,21 +246,29 @@ colnames(td_df)<- c('Species','Delta','Delta_Star','Lambda_Plus','Delta_Plus',
 td_df$dive_number <- 1:nrow(td_df) #assumes sequential dive numbering
 
 
-write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/taxonomic_distinctness.csv")
+write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_distinctness.csv")
 
-#visualize results - number of unique taxa across dives
+#visualize results - number of unique taxa across dives, saves as .png
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/unique_taxa.png")
+
 ggplot(data = td_df, aes(x = dive_number, y = Species)) +
   geom_col() +
   labs(title = "Number of Unique Taxa", x = "Dive Number", y = "Taxa Count") +
   scale_x_continuous(n.breaks = nrow(td_df)) +
   geom_text(label = td_df$Species, nudge_y = 2)
 
+dev.off()
+
 #visualize average taxonomic distinctness across dives
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/tax_dist.png")
+
 ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus)) +
   geom_col() +
   labs(title = "Average Taxonomic Distinctness (Delta Plus)", x = "Dive Number",
        y = "Delta Plus") +
   scale_x_continuous(n.breaks = nrow(td_df))
+
+dev.off()
 
 #identify unusually low or high values that may be of interest using boxplot
 #outlier detection method
@@ -259,9 +278,15 @@ delta_plus_out_row <- which(td_df$Delta_Plus %in% c(delta_plus_out))
 td_df <- td_df |> 
   mutate(DeltaPlus_outlier = if_else(dive_number %in% delta_plus_out_row, TRUE, FALSE))
 
+#plot unusual values in taxonomic distinctness across dives, visual accessibility
+#checked using Colorgorical, saves as .png
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/tax_dist_out.png")
+
 ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus, fill = DeltaPlus_outlier)) +
   geom_col() +
   labs(title = "Average Taxonomic Distinctness (Delta Plus)", x = "Dive Number",
        y = "Delta Plus", fill = "Outlier?") +
   scale_x_continuous(n.breaks = nrow(td_df)) +
-  scale_fill_manual(values = c("#818181","#6ad5eb"))
+  scale_fill_manual(values = c("#818181","#6ad5eb")) 
+
+dev.off()
