@@ -229,14 +229,18 @@ td_list <- taxondive(dive_taxa, base_taxonomy)
 #data frame. Ideally I'd like to make this code cleaner.
 td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE) #note nrow will vary based on dive number
 td_df<- as.data.frame(td_mat[,1:7])
-colnames(td_df)<- c('Species','Delta','Delta*','Lambda+','Delta+','sd_Delta+', 
-                    'SDelta+')
+colnames(td_df)<- c('Species','Delta','Delta_Star','Lambda_Plus','Delta_Plus',
+                    'sd_Delta_Plus', 'SDelta_Plus')
+#need dive number column for visualizations
 td_df$dive_number <- 1:nrow(td_df) #assumes sequential dive numbering
+
 
 write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/taxonomic_distinctness.csv")
 
-#visualize results
+#visualize results - number of unique taxa across dives
 ggplot(data = td_df, aes(x = dive_number, y = Species)) +
   geom_bar(stat = "identity") +
   labs(title = "Number of Unique Taxa", x = "Dive Number", y = "Taxa Count") +
   scale_x_continuous(n.breaks = nrow(td_df))
+
+
