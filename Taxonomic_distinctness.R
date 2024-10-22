@@ -5,6 +5,7 @@ library(ggplot2)
 library(vegan)
 library(purrr)
 library(forcats)
+library(stringr)
 
 #The inputs for this analysis are locally stored SeaTube annotation .csv files
 #and dive summary .txt files. Each annotation needs to have its paired dive
@@ -42,6 +43,7 @@ clean_annotation <- function(x) {
            `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`, 
            `Biota`,`Taxonomy`, `Phylum`, `Class`, `Order`, `Family`, `Genus`, 
            `Species`) |> 
+    mutate(across(`Dive Name`, \(x) str_replace(x, "-", "_"))) |> 
     separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
     rename(date_time = `Start Date`,
            annotation_ID = `Annotation ID`,
@@ -76,9 +78,17 @@ annotation_paths<-list.files(
 annotation_list<-map(annotation_paths, 
                      \(x) read_csv(x, col_names = TRUE, na = ""))
 
+
 annotation_clean<- annotation_list |> 
   map(clean_annotation) |> 
   list_rbind()
+
+#if multiple dives were batch exported from SeaTube into a single .csv, use
+#this code to read them directly into a single data frame instead
+
+annotation_import <- read_csv("C:/Users/julie.rose/Documents/1-OER/Biodiversity/annotations/EX1803/SeaTubeAnnotations_EX1803.csv",
+                              col_names = TRUE, na = "")
+annotation_clean <- clean_annotation(annotation_import)
 
 #Use function described above to get start and end times for the benthic
 #portion of individual dives. Apply these functions across a group of dive 
@@ -86,7 +96,7 @@ annotation_clean<- annotation_list |>
 #plus benthic start and end times for the group of dives.
 
 dive_summary_paths<-list.files(
-  "C:/Users/julie.rose/Documents/1-OER/Biodiversity/dive_summaries", 
+  "C:/Users/julie.rose/Documents/1-OER/Biodiversity/dive_summaries/EX1803", 
   pattern = "[.]txt$", full.names = TRUE)
 
 benthic_start_list<-map(dive_summary_paths, 
@@ -97,8 +107,10 @@ benthic_end_list<-map(dive_summary_paths,
 
 benthic_start<- as.POSIXct(unlist(benthic_start_list))
 benthic_end<- as.POSIXct(unlist(benthic_end_list))
-dive_number<-c(1:length(benthic_start)) #assumes your dives are
-#numbered sequentially starting with 1, this code could use improvement
+
+dive_number<-c(3,4,5,6,7,8,9,10,11,12,13,14,15) #this needs updating for each
+#analysis with the corresponding dives; it would be nice to extract this from
+#the clean_annotations data frame or from the dive summaries themselves
 
 benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 
@@ -114,7 +126,7 @@ benthic_annotations<- benthic_join |>
   filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   ungroup()
 
-write.csv(benthic_annotations,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/benthic_annotations.csv")
+write.csv(benthic_annotations,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/benthic_annotations.csv")
 
 #------------------------------------------------------------------------------
 
@@ -159,7 +171,7 @@ annotations_taxonomy_forplot <- annotations_taxonomy_count |>
 
 #plots the normalized count for each taxonomic level, with dives shown in 
 #different colors, saves as .png
-png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_count_all.png")
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/taxonomic_count_all.png")
 
 ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level, 
                                          y = normalized_count_unique, 
@@ -176,7 +188,7 @@ dev.off()
 #plots the normalized count for each taxonomic level by individual dive
 #depending on number of dives, try tweaking the ncol value in the facet_wrap to
 #improve the visualization, saves as .png
-png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_count_facet.png")
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/taxonomic_count_facet.png")
 
 ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          y = normalized_count_unique,
@@ -238,18 +250,18 @@ td_list <- taxondive(dive_taxa, base_taxonomy)
 #converting to a matrix works ok. Don't need the expected values in the analysis
 #so for now just removing the last column of the matrix as I convert that to a
 #data frame. Ideally I'd like to make this code cleaner.
-td_mat <- matrix(unlist(td_list), nrow = 19, byrow = FALSE) #note nrow will vary based on dive number
+td_mat <- matrix(unlist(td_list), nrow = 13, byrow = FALSE) #note nrow will vary based on dive number
 td_df<- as.data.frame(td_mat[,1:7])
 colnames(td_df)<- c('Species','Delta','Delta_Star','Lambda_Plus','Delta_Plus',
                     'sd_Delta_Plus', 'SDelta_Plus')
 #need dive number column for visualizations
-td_df$dive_number <- 1:nrow(td_df) #assumes sequential dive numbering
+td_df$dive_number <- dive_number #references vector created at the beginning
 
 
-write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/taxonomic_distinctness.csv")
+write.csv(td_df,"C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/taxonomic_distinctness.csv")
 
 #visualize results - number of unique taxa across dives, saves as .png
-png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/unique_taxa.png")
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/unique_taxa.png")
 
 ggplot(data = td_df, aes(x = dive_number, y = Species)) +
   geom_col() +
@@ -260,7 +272,7 @@ ggplot(data = td_df, aes(x = dive_number, y = Species)) +
 dev.off()
 
 #visualize average taxonomic distinctness across dives
-png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/tax_dist.png")
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/tax_dist.png")
 
 ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus)) +
   geom_col() +
@@ -280,7 +292,7 @@ td_df <- td_df |>
 
 #plot unusual values in taxonomic distinctness across dives, visual accessibility
 #checked using Colorgorical, saves as .png
-png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1903L2/tax_dist_out.png")
+png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/tax_dist_out.png")
 
 ggplot(data = td_df, aes(x = dive_number, y = Delta_Plus, fill = DeltaPlus_outlier)) +
   geom_col() +
