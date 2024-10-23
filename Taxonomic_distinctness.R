@@ -177,8 +177,13 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          y = normalized_count_unique, 
                                          color = dive_number, 
                                          group = dive_number)) +
-  geom_line() +
-  theme(axis.text.x = element_text(angle = -30, hjust = 0))
+  geom_line(size = 1.25) +
+  labs(title = "Number of Unique Taxa at Each Taxonomic Level",
+       subtitle = "Normalized across dives by total observed taxa",
+       x = "Taxonomic Level", y = "Normalized Count of Unique Taxa",
+       color = "Dive Number") +
+  theme(axis.text.x = element_text(size = 12, angle = -30, hjust = 0)) +
+  theme(axis.title = element_text(size = 14))
 
 dev.off()
 
@@ -194,8 +199,13 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          y = normalized_count_unique,
                                          group = dive_number)) +
   geom_line() +
-  theme(axis.text.x = element_text(angle = -30, hjust = 0)) +
-  facet_wrap(~ dive_number, ncol = 3)
+  theme(axis.text.x = element_text(size = 12, angle = -30, hjust = 0)) +
+  facet_wrap(~ dive_number, ncol = 3) +
+  labs(title = "Number of Unique Taxa at Each Taxonomic Level",
+       subtitle = "Normalized across dives by total observed taxa",
+       x = "Taxonomic Level", y = "Normalized Count of Unique Taxa") +
+  theme(axis.title = element_text(size = 14)) +
+  theme(plot.margin = unit(c(.3, 1.5, .3, .3), "cm"))
 
 dev.off()
 
