@@ -187,9 +187,6 @@ ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
 
 dev.off()
 
-#the plot above could use some work - the individual dives are a little hard to
-#distinguish
-
 #plots the normalized count for each taxonomic level by individual dive
 #depending on number of dives, try tweaking the ncol value in the facet_wrap to
 #improve the visualization, saves as .png
@@ -198,7 +195,7 @@ png("C:/Users/julie.rose/Documents/1-OER/Biodiversity/exports/EX1803/taxonomic_c
 ggplot(annotations_taxonomy_forplot, aes(x = taxonomic_level,
                                          y = normalized_count_unique,
                                          group = dive_number)) +
-  geom_line() +
+  geom_line(size = 1.25) +
   theme(axis.text.x = element_text(size = 12, angle = -30, hjust = 0)) +
   facet_wrap(~ dive_number, ncol = 3) +
   labs(title = "Number of Unique Taxa at Each Taxonomic Level",
