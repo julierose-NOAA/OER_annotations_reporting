@@ -68,14 +68,14 @@ clean_annotation <- function(x) {
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1811"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX1803"
+data_name <- "EX1811"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(3,4,5,6,7,8,9,10,11,12,13,14,15) #this needs updating for each
+dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
