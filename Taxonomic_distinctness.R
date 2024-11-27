@@ -141,6 +141,23 @@ benthic_annotations<- benthic_join |>
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
 
 #------------------------------------------------------------------------------
+#overall summary statistics for the dive and annotations
+#check the summary_stats output for QAQC before continuing with the taxonomic 
+#distinctness analysis. Sometimes dives only have a few annotations even if they
+#are not labeled as test dives.
+
+biological_annotations <- benthic_annotations |>
+  select("dive_number","species","genus","family","order","class","phylum") |> 
+  group_by(dive_number) |>
+  summarize(across(phylum:species, \(x) sum(!is.na(x))))
+
+bottom_time <- difftime(benthic_end, benthic_start, units = "hours")
+
+summary_stats <- cbind(biological_annotations, bottom_time)
+#phylum represents total biological annotations because each annotation has a 
+#minimum identification to the phylum level
+
+#------------------------------------------------------------------------------
 
 #function to calculate number of unique taxa at each taxonomic level for an
 #individual dive
