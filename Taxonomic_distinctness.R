@@ -43,7 +43,8 @@ clean_annotation <- function(x) {
            `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`, 
            `Biota`,`Taxonomy`, `Phylum`, `Class`, `Order`, `Family`, `Genus`, 
            `Species`) |> 
-    mutate(across(`Dive Name`, \(x) str_replace(x, "-", "_"))) |> 
+    mutate(across(`Dive Name`, \(x) str_replace(x, "-", "_"))) |>
+    mutate(across(`Dive Name`, \(x) word(x,1))) |> 
     separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
     rename(date_time = `Start Date`,
            annotation_ID = `Annotation ID`,
