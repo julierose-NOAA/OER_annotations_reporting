@@ -14,17 +14,32 @@ library(stringr)
 #if that would be useful.
 
 #these two functions scan individual dive summary .txt files and extract the
-#benthic start/end times for later use in filtering the annotation file.
-import_benthic_start <- function(filename) {
+#benthic start/end times for later use in filtering the annotation file. Use
+#of if/else conditions accommodates for formatting changes made to standard
+#dive summary template after 2020
+import_benthic_start_pre2020 <- function(filename) {
   dive_summary <- scan(filename, what = 'character', skip = 2, sep="\t")
   start_benthic <- as.POSIXct(dive_summary[10], tz="UTC", 
                               format = "%Y-%m-%dT%H:%M:%OS")
   
 }
 
-import_benthic_end <- function(filename) {
+import_benthic_start_post2020 <- function(filename) {
+  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
+  start_benthic <- as.POSIXct(dive_summary[9], tz="UTC", 
+                              format = "%Y-%m-%dT%H:%M:%OS")
+  
+}
+
+import_benthic_end_pre2020 <- function(filename) {
   dive_summary <- scan(filename, what = 'character', skip = 2, sep="\t")
   end_benthic <- as.POSIXct(dive_summary[24], tz="UTC", 
+                            format = "%Y-%m-%dT%H:%M:%OS")
+}
+
+import_benthic_end_post2020 <- function(filename) {
+  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
+  end_benthic <- as.POSIXct(dive_summary[15], tz="UTC", 
                             format = "%Y-%m-%dT%H:%M:%OS")
 }
 
@@ -69,14 +84,14 @@ clean_annotation <- function(x) {
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1811"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2103"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX1811"
+data_name <- "EX2103"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
+dive_number<-c(1,2,3,4,5,6,7,8,9,10) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
@@ -104,22 +119,34 @@ annotation_clean<- annotation_list |>
 annotation_import <- read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", data_name, ".csv"),
                               col_names = TRUE, na = "")
 annotation_clean <- clean_annotation(annotation_import)
+View(annotation_clean)
 
 #-------------------------------------------------------------------------------
 
 #Use function described above to get start and end times for the benthic
 #portion of individual dives. Apply these functions across a group of dive 
 #summary .txt files stored locally. Create a dataframe that contains dive number
-#plus benthic start and end times for the group of dives.
+#plus benthic start and end times for the group of dives. If/else conditional
+#accommodates for formatting changes made to dive summaries after 2020
 
 dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"), 
   pattern = "[.]txt$", full.names = TRUE)
 
-benthic_start_list<-map(dive_summary_paths, 
-                        \(x) import_benthic_start(x))
+if (annotation_clean$date_time[1] < "2020-01-01") {
+  benthic_start_list<-map(dive_summary_paths, 
+                          \(x) import_benthic_start_pre2020(x))
+} else if (annotation_clean$date_time[1] > "2020-01-01") {
+  benthic_start_list<-map(dive_summary_paths, 
+                          \(x) import_benthic_start_post2020(x))
+}
 
-benthic_end_list<-map(dive_summary_paths, 
-                      \(x) import_benthic_end(x))
+if (annotation_clean$date_time[1] < "2020-01-01") {
+  benthic_end_list<-map(dive_summary_paths, 
+                        \(x) import_benthic_end_pre2020(x))
+} else if (annotation_clean$date_time[1] > "2020-01-01") {
+  benthic_end_list<-map(dive_summary_paths, 
+                        \(x) import_benthic_end_post2020(x))
+}
 
 benthic_start<- as.POSIXct(unlist(benthic_start_list))
 benthic_end<- as.POSIXct(unlist(benthic_end_list))
@@ -150,6 +177,7 @@ biological_annotations <- benthic_annotations |>
   select("dive_number","species","genus","family","order","class","phylum") |> 
   group_by(dive_number) |>
   summarize(across(phylum:species, \(x) sum(!is.na(x))))
+View(biological_annotations)
 
 bottom_time <- difftime(benthic_end, benthic_start, units = "hours")
 
