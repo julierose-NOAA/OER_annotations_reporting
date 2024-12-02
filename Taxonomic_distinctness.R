@@ -84,14 +84,14 @@ clean_annotation <- function(x) {
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2103"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2103"
+data_name <- "EX2104"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10) #this needs updating for each
+dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
@@ -178,7 +178,7 @@ View(biological_annotations)
 #optional code below to update dive list and filter for just dives with full
 #annotations
 
-dives<-c(7,8,9,10)
+dives<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
 biological_annotations <- biological_annotations |> 
   filter(dive_number %in% dives)
 
@@ -190,7 +190,7 @@ benthic_annotations <- benthic_annotations |>
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
 
 #if necessary, select subset of benthic start and end times below
-bottom_time_hours <- difftime(benthic_end[7:10], benthic_start[7:10], units = "hours")
+bottom_time_hours <- difftime(benthic_end[1:19], benthic_start[1:19], units = "hours")
 
 summary_stats <- cbind(biological_annotations, bottom_time_hours)
 View(summary_stats)
