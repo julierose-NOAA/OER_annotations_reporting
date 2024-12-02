@@ -165,17 +165,14 @@ benthic_annotations<- benthic_join |>
   filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   ungroup()
 
-write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
-
-#------------------------------------------------------------------------------
-#overall summary statistics for the dive and annotations
+#QAQC STEP: overall summary statistics for the dive and annotations
 
 biological_annotations <- benthic_annotations |>
   select("dive_number","species","genus","family","order","class","phylum") |> 
   group_by(dive_number) |>
   summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
-#stop here and check the summary_stats output for QAQC before continuing with 
+#STOP HERE and check the summary_stats output for QAQC before continuing with 
 #the taxonomic distinctness analysis. Sometimes dives only have a few 
 #annotations even if they are not labeled as test dives. If necessary, use 
 #optional code below to update dive list and filter for just dives with full
@@ -185,11 +182,19 @@ dives<-c(7,8,9,10)
 biological_annotations <- biological_annotations |> 
   filter(dive_number %in% dives)
 
-#if necessary, select subset of benthic start and end times below
-bottom_time <- difftime(benthic_end[7:10], benthic_start[7:10], units = "hours")
+#if necessary, filter the benthic_annotations data frame before continuing
+#with taxonomic distinctness calculation
+benthic_annotations <- benthic_annotations |> 
+  filter(dive_number %in% dives)
 
-summary_stats <- cbind(biological_annotations, bottom_time)
+write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
+
+#if necessary, select subset of benthic start and end times below
+bottom_time_hours <- difftime(benthic_end[7:10], benthic_start[7:10], units = "hours")
+
+summary_stats <- cbind(biological_annotations, bottom_time_hours)
 View(summary_stats)
+write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, ".csv"))
 #phylum represents total biological annotations because each annotation has a 
 #minimum identification to the phylum level
 
@@ -322,12 +327,12 @@ td_list <- taxondive(dive_taxa, base_taxonomy)
 #converting to a matrix works ok. Don't need the expected values in the analysis
 #so for now just removing the last column of the matrix as I convert that to a
 #data frame. Ideally I'd like to make this code cleaner.
-td_mat <- matrix(unlist(td_list), nrow = length(dive_number), byrow = FALSE) 
+td_mat <- matrix(unlist(td_list), nrow = length(dives), byrow = FALSE) 
 td_df<- as.data.frame(td_mat[,1:7])
 colnames(td_df)<- c('Species','Delta','Delta_Star','Lambda_Plus','Delta_Plus',
                     'sd_Delta_Plus', 'SDelta_Plus')
 #need dive number column for visualizations
-td_df$dive_number <- dive_number #references vector created at the beginning
+td_df$dive_number <- dives #references vector created after annotation QAQC step
 
 
 write.csv(td_df, paste0(wd, "/exports/taxonomic_distinctness_", data_name, ".csv"))
