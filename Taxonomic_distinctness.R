@@ -84,41 +84,41 @@ clean_annotation <- function(x) {
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2104"
+data_name <- "EX2107"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) #this needs updating for each
+dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
 #------------------------------------------------------------------------------
-#Use this code if your dives are individual .csv files:
-#Read in a group of annotation files saved locally as .csv exports from SeaTube
-#Save each file as a dataframe within a list, apply the clean function described
-#above to each dataframe within this list, then combine them into a single df
+#Read in annotation file and apply clean function
+#This can accommodate a single .csv with all dives or a group of annotation 
+#files saved locally as .csv exports from SeaTube. Uses the number of files
+#in the annotation folder to determine which import process to execute.
 
 annotation_paths<-list.files(paste0(wd, "/annotations"), 
   pattern = "[.]csv$", full.names = TRUE)
 
-annotation_list<-map(annotation_paths, 
-                     \(x) read_csv(x, col_names = TRUE, na = ""))
+if (length(annotation_paths > 1)) {
+  annotation_list<-map(annotation_paths, 
+                       \(x) read_csv(x, col_names = TRUE, na = ""))
+  
+  annotation_clean<- annotation_list |> 
+    map(clean_annotation) |> 
+    list_rbind()
+  
+} else {
+  annotation_import <- read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
+                                       data_name, ".csv"), col_names = TRUE, 
+                                na = "")
+  annotation_clean <- clean_annotation(annotation_import)
+}
 
-
-annotation_clean<- annotation_list |> 
-  map(clean_annotation) |> 
-  list_rbind()
-
-#Use this code if you have multiple dives in a single .csv:
-#if multiple dives were batch exported from SeaTube into a single .csv, use
-#this code to read them directly into a single data frame instead
-
-annotation_import <- read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", data_name, ".csv"),
-                              col_names = TRUE, na = "")
-annotation_clean <- clean_annotation(annotation_import)
 View(annotation_clean)
 
 #-------------------------------------------------------------------------------
