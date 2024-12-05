@@ -62,7 +62,7 @@ clean_annotation <- function(x) {
            `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
            `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`, 
            `Biota`,`Taxonomy`, `Phylum`, `Class`, `Order`, `Family`, `Genus`, 
-           `Species`) |> 
+           `Species`,`Component`) |> 
     mutate(across(`Dive Name`, \(x) str_replace(x, "-", "_"))) |>
     mutate(across(`Dive Name`, \(x) word(x,1))) |> 
     separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
@@ -81,11 +81,12 @@ clean_annotation <- function(x) {
            order = `Order`,
            family = `Family`,
            genus = `Genus`,
-           species = `Species`) |> 
+           species = `Species`,
+           component = `Component`) |> 
     mutate(dive_number = toupper(dive_number)) |> 
     mutate(dive_number = gsub("DIVE","",dive_number)) |> 
     mutate(dive_number = as.numeric(dive_number)) |> 
-    filter(biota == "Biota") 
+    filter(taxonomy %in% c("WoRMS","CMECS"))
 }
 
 #set working directory
@@ -173,7 +174,15 @@ benthic_annotations<- benthic_join |>
 
 #QAQC STEP: overall summary statistics for the dive and annotations
 
+substrate_annotations <- benthic_annotations |> 
+  filter(taxonomy == "CMECS") |> 
+  select("dive_number", "component") |> 
+  group_by(dive_number) |> 
+  summarize(geoform_or_substrate = sum(!is.na(component)))
+View(substrate_annotations)
+
 biological_annotations <- benthic_annotations |>
+  filter(biota == "Biota") |> 
   select("dive_number","species","genus","family","order","class","phylum") |> 
   group_by(dive_number) |>
   summarize(across(phylum:species, \(x) sum(!is.na(x))))
@@ -207,6 +216,9 @@ if (annotation_clean$date_time[1] > "2020-01-01") {
 summary_stats <- cbind(biological_annotations, bottom_time_hours)
 }
 
+summary_stats<-left_join(summary_stats, substrate_annotations, 
+                        join_by("dive_number" == "dive_number"))
+
 View(summary_stats)
 write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, ".csv"))
 #phylum represents total biological annotations because each annotation has a 
@@ -230,6 +242,7 @@ taxonomy_count <- function(x) {
 #normalization helps to put all dives on a similar scale which improves the
 #visualization in the next step
 annotations_taxonomy_count <- benthic_annotations |> 
+  filter(biota == "Biota") |> 
   select("dive_number","species","genus","family","order","class","phylum") |> 
   group_by(dive_number) |> 
   taxonomy_count() |> 
@@ -313,6 +326,7 @@ dev.off()
 #taxa2dist to create the input file for vegan (#2 above).
 
 base_taxonomy <- benthic_annotations |> 
+    filter(biota == "Biota") |> 
     select(family:phylum) |>  #modify this for different taxonomic level analysis
     drop_na() |> 
     distinct() |> 
@@ -321,6 +335,7 @@ base_taxonomy <- benthic_annotations |>
 
 #add summary text
 dive_taxa_pivot <- benthic_annotations |> 
+  filter(biota == "Biota") |> 
   select(dive_number, phylum:family) |>  #modify this for different TL analysis
   group_by(dive_number) |> 
   drop_na() |> 
