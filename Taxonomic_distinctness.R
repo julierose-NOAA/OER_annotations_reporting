@@ -50,7 +50,8 @@ import_distance_traveled_post2020 <- function(filename) {
 
 #this function cleans up the annotation file - selects relevant columns only, 
 #renames columns, and reorders. Separates the expedition name from the dive 
-#number. Selects the biological data by filtering on the "biota" column.
+#number. Selects the biological and substrate data by filtering on the 
+#"taxonomy" column.
 
 clean_annotation <- function(x) { 
   x |> 
