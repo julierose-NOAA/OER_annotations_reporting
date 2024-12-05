@@ -43,6 +43,11 @@ import_benthic_end_post2020 <- function(filename) {
                             format = "%Y-%m-%dT%H:%M:%OS")
 }
 
+import_distance_traveled_post2020 <- function(filename) {
+  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
+  distance_traveled <- as.numeric(dive_summary[43])
+}
+
 #this function cleans up the annotation file - selects relevant columns only, 
 #renames columns, and reorders. Separates the expedition name from the dive 
 #number. Selects the biological data by filtering on the "biota" column.
@@ -84,14 +89,14 @@ clean_annotation <- function(x) {
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2201"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2107"
+data_name <- "EX2201"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) #this needs updating for each
+dive_number<-c(1,3,4,5,6,7) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
@@ -155,7 +160,8 @@ benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 
 #Joins the clean annotations dataframe to the benthic times dataframe 
 #and then filters the annotations data to only include the benthic portion of
-#each dive.
+#each dive. This join also removes any dives with no corresponding dive summary
+#file (e.g. test dives, UCH dives)
 
 benthic_join<-left_join(annotation_clean, benthic_times, 
                         join_by("dive_number" == "dive_number"))
@@ -178,7 +184,7 @@ View(biological_annotations)
 #optional code below to update dive list and filter for just dives with full
 #annotations
 
-dives<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
+dives<-c(1,3,4,5,6,7)
 biological_annotations <- biological_annotations |> 
   filter(dive_number %in% dives)
 
@@ -190,9 +196,17 @@ benthic_annotations <- benthic_annotations |>
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
 
 #if necessary, select subset of benthic start and end times below
-bottom_time_hours <- difftime(benthic_end[1:19], benthic_start[1:19], units = "hours")
+bottom_time_hours <- difftime(benthic_end[1:6], benthic_start[1:6], units = "hours")
 
+if (annotation_clean$date_time[1] > "2020-01-01") {
+  distance<-map(dive_summary_paths, 
+                        \(x) import_distance_traveled_post2020(x))
+  summary_stats <- cbind(biological_annotations, bottom_time_hours, 
+                         distance_traveled_m = unlist(distance))
+} else {
 summary_stats <- cbind(biological_annotations, bottom_time_hours)
+}
+
 View(summary_stats)
 write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, ".csv"))
 #phylum represents total biological annotations because each annotation has a 
