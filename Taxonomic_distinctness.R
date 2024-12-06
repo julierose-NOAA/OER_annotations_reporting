@@ -87,18 +87,18 @@ clean_annotation <- function(x) {
     mutate(dive_number = toupper(dive_number)) |> 
     mutate(dive_number = gsub("DIVE","",dive_number)) |> 
     mutate(dive_number = as.numeric(dive_number)) |> 
-    filter(taxonomy %in% c("WoRMS","CMECS"))
+    filter(taxonomy %in% c("WoRMS","WoRDSS","CMECS"))
 }
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2201"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2201"
+data_name <- "EX1803"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,3,4,5,6,7) #this needs updating for each
+dive_number<-c(3,4,5,6,7,8,9,10,11,12,13,14,15) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
@@ -172,6 +172,7 @@ benthic_annotations<- benthic_join |>
   group_by(dive_number) |> 
   filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   ungroup()
+View(benthic_annotations)
 
 #QAQC STEP: overall summary statistics for the dive and annotations
 
@@ -194,7 +195,7 @@ View(biological_annotations)
 #optional code below to update dive list and filter for just dives with full
 #annotations
 
-dives<-c(1,3,4,5,6,7)
+dives<-c(3,4,5,6,7,8,9,10,11,12,13,14,15)
 biological_annotations <- biological_annotations |> 
   filter(dive_number %in% dives)
 
@@ -206,7 +207,7 @@ benthic_annotations <- benthic_annotations |>
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
 
 #if necessary, select subset of benthic start and end times below
-bottom_time_hours <- difftime(benthic_end[1:6], benthic_start[1:6], units = "hours")
+bottom_time_hours <- difftime(benthic_end, benthic_start, units = "hours")
 
 if (annotation_clean$date_time[1] > "2020-01-01") {
   distance<-map(dive_summary_paths, 
