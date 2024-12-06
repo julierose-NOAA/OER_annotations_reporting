@@ -204,9 +204,13 @@ biological_annotations <- biological_annotations |>
 benthic_annotations <- benthic_annotations |> 
   filter(dive_number %in% dives)
 
-write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", data_name, ".csv"))
+write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
+                                      data_name, ".csv"), row.names = FALSE)
 
 #if necessary, select subset of benthic start and end times below
+#this could use some work to automate - maybe try adding dive number to
+#benthic_start and benthic_end and do a join instead of cbind so that I don't
+#have to manually update this part of the code
 bottom_time_hours <- difftime(benthic_end, benthic_start, units = "hours")
 
 if (annotation_clean$date_time[1] > "2020-01-01") {
@@ -222,7 +226,8 @@ summary_stats<-left_join(summary_stats, substrate_annotations,
                         join_by("dive_number" == "dive_number"))
 
 View(summary_stats)
-write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, ".csv"))
+write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, 
+                                ".csv"),row.names = FALSE)
 #phylum represents total biological annotations because each annotation has a 
 #minimum identification to the phylum level
 
@@ -366,7 +371,8 @@ colnames(td_df)<- c('Species','Delta','Delta_Star','Lambda_Plus','Delta_Plus',
 td_df$dive_number <- dives #references vector created after annotation QAQC step
 
 
-write.csv(td_df, paste0(wd, "/exports/taxonomic_distinctness_", data_name, ".csv"))
+write.csv(td_df, paste0(wd, "/exports/taxonomic_distinctness_", data_name, 
+                        ".csv"), row.names = FALSE)
 
 #visualize results - number of unique taxa across dives, saves as .png
 png(paste0(wd, "/exports/unique_taxa_", data_name, ".png"))
