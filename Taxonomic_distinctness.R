@@ -40,15 +40,15 @@ annotation_paths<-list.files(paste0(wd, "/annotations"),
   pattern = "[.]csv$", full.names = TRUE)
 
 if (length(annotation_paths > 1)) {
-  annotation_list<-map(annotation_paths, 
-                       \(x) read_csv(x, col_names = TRUE, na = ""))
+  annotation_list<-purrr::map(annotation_paths, 
+                       \(x) readr::read_csv(x, col_names = TRUE, na = ""))
   
   annotation_clean<- annotation_list |> 
-    map(clean_annotation) |> 
+    purrr::map(clean_annotation) |> 
     list_rbind()
   
 } else {
-  annotation_import <- read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
+  annotation_import <- readr::read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
                                        data_name, ".csv"), col_names = TRUE, 
                                 na = "")
   annotation_clean <- clean_annotation(annotation_import)
@@ -68,18 +68,18 @@ dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"),
   pattern = "[.]txt$", full.names = TRUE)
 
 if (annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_start_list<-map(dive_summary_paths, 
+  benthic_start_list<-purrr::map(dive_summary_paths, 
                           \(x) import_benthic_start_pre2020(x))
 } else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_start_list<-map(dive_summary_paths, 
+  benthic_start_list<-purrr::map(dive_summary_paths, 
                           \(x) import_benthic_start_post2020(x))
 }
 
 if (annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_end_list<-map(dive_summary_paths, 
+  benthic_end_list<-purrr::map(dive_summary_paths, 
                         \(x) import_benthic_end_pre2020(x))
 } else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_end_list<-map(dive_summary_paths, 
+  benthic_end_list<-purrr::map(dive_summary_paths, 
                         \(x) import_benthic_end_post2020(x))
 }
 
@@ -93,29 +93,29 @@ benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 #each dive. This join also removes any dives with no corresponding dive summary
 #file (e.g. test dives, UCH dives)
 
-benthic_join<-left_join(annotation_clean, benthic_times, 
+benthic_join<-dplyr::left_join(annotation_clean, benthic_times, 
                         join_by("dive_number" == "dive_number"))
 
 benthic_annotations<- benthic_join |> 
-  group_by(dive_number) |> 
-  filter(date_time>=benthic_start & date_time<=benthic_end) |> 
-  ungroup()
+  dplyr::group_by(dive_number) |> 
+  dplyr::filter(date_time>=benthic_start & date_time<=benthic_end) |> 
+  dplyr::ungroup()
 View(benthic_annotations)
 
 #QAQC STEP: overall summary statistics for the dive and annotations
 
 substrate_annotations <- benthic_annotations |> 
-  filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
-  select("dive_number", "component") |> 
-  group_by(dive_number) |> 
-  summarize(geoform_or_substrate = sum(!is.na(component)))
+  dplyr::filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
+  dplyr::select("dive_number", "component") |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::summarize(geoform_or_substrate = sum(!is.na(component)))
 View(substrate_annotations)
 
 biological_annotations <- benthic_annotations |>
-  filter(biota == "Biota") |> 
-  select("dive_number","species","genus","family","order","class","phylum") |> 
-  group_by(dive_number) |>
-  summarize(across(phylum:species, \(x) sum(!is.na(x))))
+  dplyr::filter(biota == "Biota") |> 
+  dplyr::select("dive_number","species","genus","family","order","class","phylum") |> 
+  dplyr::group_by(dive_number) |>
+  dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
 #STOP HERE and check the summary_stats output for QAQC before continuing with 
 #the taxonomic distinctness analysis. Sometimes dives only have a few 
@@ -125,12 +125,12 @@ View(biological_annotations)
 
 dives<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
 biological_annotations <- biological_annotations |> 
-  filter(dive_number %in% dives)
+  dplyr::filter(dive_number %in% dives)
 
 #if necessary, filter the benthic_annotations data frame before continuing
 #with taxonomic distinctness calculation
 benthic_annotations <- benthic_annotations |> 
-  filter(dive_number %in% dives)
+  dplyr::filter(dive_number %in% dives)
 
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
                                       data_name, ".csv"), row.names = FALSE)
@@ -142,7 +142,7 @@ write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_",
 bottom_time_hours <- difftime(benthic_end, benthic_start, units = "hours")
 
 if (annotation_clean$date_time[1] > "2020-01-01") {
-  distance<-map(dive_summary_paths, 
+  distance<-purrr::map(dive_summary_paths, 
                         \(x) import_distance_traveled_post2020(x))
   summary_stats <- cbind(biological_annotations, bottom_time_hours, 
                          distance_traveled_m = unlist(distance))
@@ -150,7 +150,7 @@ if (annotation_clean$date_time[1] > "2020-01-01") {
 summary_stats <- cbind(biological_annotations, bottom_time_hours)
 }
 
-summary_stats<-left_join(summary_stats, substrate_annotations, 
+summary_stats<-dplyr::left_join(summary_stats, substrate_annotations, 
                         join_by("dive_number" == "dive_number"))
 
 View(summary_stats)
@@ -168,25 +168,25 @@ write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name,
 #normalization helps to put all dives on a similar scale which improves the
 #visualization in the next step
 annotations_taxonomy_count <- benthic_annotations |> 
-  filter(biota == "Biota") |> 
-  select("dive_number","species","genus","family","order","class","phylum") |> 
-  group_by(dive_number) |> 
+  dplyr::filter(biota == "Biota") |> 
+  dplyr::select("dive_number","species","genus","family","order","class","phylum") |> 
+  dplyr::group_by(dive_number) |> 
   taxonomy_count() |> 
-  rowwise() |> 
-  mutate(total_taxa = sum(species+genus+family+order+class+phylum)) |> 
-  mutate(across(phylum:species, \(x) x/total_taxa, .names = "{.col}_norm"))
+  dplyr::rowwise() |> 
+  dplyr::mutate(total_taxa = sum(species+genus+family+order+class+phylum)) |> 
+  dplyr::mutate(across(phylum:species, \(x) x/total_taxa, .names = "{.col}_norm"))
 
 #rotates the normalized count dataframe and converts taxonomic level to a factor
 #for easier plotting
 annotations_taxonomy_forplot <- annotations_taxonomy_count |> 
-  select("dive_number","species_norm","genus_norm","family_norm","order_norm",
+  dplyr::select("dive_number","species_norm","genus_norm","family_norm","order_norm",
          "class_norm","phylum_norm") |> 
-  pivot_longer(phylum_norm:species_norm) |> 
-  rename(taxonomic_level = name,
+  tidyr::pivot_longer(phylum_norm:species_norm) |> 
+  dplyr::rename(taxonomic_level = name,
          normalized_count_unique = value) |> 
-  mutate(taxonomic_level = as.factor(taxonomic_level),
+  dplyr::mutate(taxonomic_level = as.factor(taxonomic_level),
          dive_number = as.factor(dive_number)) |> 
-  mutate(taxonomic_level = fct_relevel(taxonomic_level, 
+  dplyr::mutate(taxonomic_level = forcats::fct_relevel(taxonomic_level, 
                                        c("phylum_norm","class_norm",
                                          "order_norm","family_norm",
                                          "genus_norm","species_norm"))) #this
@@ -252,30 +252,30 @@ dev.off()
 #taxa2dist to create the input file for vegan (#2 above).
 
 base_taxonomy <- benthic_annotations |> 
-    filter(biota == "Biota") |> 
-    select(family:phylum) |>  #modify this for different taxonomic level analysis
-    drop_na() |> 
-    distinct() |> 
-    tibble::column_to_rownames(var = "family") |> #this too
-    taxa2dist()
+  dplyr::filter(biota == "Biota") |> 
+  dplyr::select(family:phylum) |>  #modify this for different taxonomic level analysis
+  tidyr::drop_na() |> 
+  dplyr::distinct() |> 
+  tibble::column_to_rownames(var = "family") |> #this too
+  vegan::taxa2dist()
 
 #add summary text
 dive_taxa_pivot <- benthic_annotations |> 
-  filter(biota == "Biota") |> 
-  select(dive_number, phylum:family) |>  #modify this for different TL analysis
-  group_by(dive_number) |> 
-  drop_na() |> 
-  distinct() |>  
-  ungroup() |> 
-  mutate(seen = 1) |> 
-  select(dive_number, family, seen) |>  #this too
-  pivot_wider(names_from = dive_number, values_from = seen, values_fill = 0)
+  dplyr::filter(biota == "Biota") |> 
+  dplyr::select(dive_number, phylum:family) |>  #modify this for different TL analysis
+  dplyr::group_by(dive_number) |> 
+  tidyr::drop_na() |> 
+  dplyr::distinct() |>  
+  dplyr::ungroup() |> 
+  dplyr::mutate(seen = 1) |> 
+  dplyr::select(dive_number, family, seen) |>  #this too
+  tidyr::pivot_wider(names_from = dive_number, values_from = seen, values_fill = 0)
   
   
 dive_taxa <- as.data.frame(t(dive_taxa_pivot[,-1])) 
 colnames(dive_taxa) <- dive_taxa_pivot$family  #this too
 
-td_list <- taxondive(dive_taxa, base_taxonomy)
+td_list <- vegan::taxondive(dive_taxa, base_taxonomy)
 
 #taxondive outputs to a list, need to convert to data frame but the vectors are
 #unequal length. Would be great to go straight to a data frame but for now first
