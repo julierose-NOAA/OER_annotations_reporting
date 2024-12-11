@@ -13,83 +13,6 @@ library(stringr)
 #could be easily adapted to select just the water column portion of the dive
 #if that would be useful.
 
-#these two functions scan individual dive summary .txt files and extract the
-#benthic start/end times for later use in filtering the annotation file. Use
-#of if/else conditions accommodates for formatting changes made to standard
-#dive summary template after 2020
-import_benthic_start_pre2020 <- function(filename) {
-  dive_summary <- scan(filename, what = 'character', skip = 2, sep="\t")
-  start_benthic <- as.POSIXct(dive_summary[10], tz="UTC", 
-                              format = "%Y-%m-%dT%H:%M:%OS")
-  
-}
-
-import_benthic_start_post2020 <- function(filename) {
-  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
-  start_benthic <- as.POSIXct(dive_summary[9], tz="UTC", 
-                              format = "%Y-%m-%dT%H:%M:%OS")
-  
-}
-
-import_benthic_end_pre2020 <- function(filename) {
-  dive_summary <- scan(filename, what = 'character', skip = 2, sep="\t")
-  end_benthic <- as.POSIXct(dive_summary[24], tz="UTC", 
-                            format = "%Y-%m-%dT%H:%M:%OS")
-}
-
-import_benthic_end_post2020 <- function(filename) {
-  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
-  end_benthic <- as.POSIXct(dive_summary[15], tz="UTC", 
-                            format = "%Y-%m-%dT%H:%M:%OS")
-}
-
-import_distance_traveled_post2020 <- function(filename) {
-  dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
-  distance_traveled <- as.numeric(dive_summary[43])
-}
-
-#this function cleans up the annotation file - selects relevant columns only, 
-#renames columns, and reorders. Separates the expedition name from the dive 
-#number. Selects the biological and substrate data by filtering on the 
-#"taxonomy" column.
-
-clean_annotation <- function(x) { 
-  x |> 
-    select(`Dive Name`, `Start Date`, `Annotation ID`, 
-           `DEEPDISCOVERERNAV01_23975_Latitude`,
-           `DEEPDISCOVERERNAV01_23975_Longitude`,
-           `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
-           `SBECTD9PLUSDEEPDISCOVERER_23978_Temperature`,
-           `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
-           `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`, 
-           `Biota`,`Taxonomy`, `Phylum`, `Class`, `Order`, `Family`, `Genus`, 
-           `Species`,`Component`) |> 
-    mutate(across(`Dive Name`, \(x) str_replace(x, "-", "_"))) |>
-    mutate(across(`Dive Name`, \(x) word(x,1))) |> 
-    separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
-    rename(date_time = `Start Date`,
-           annotation_ID = `Annotation ID`,
-           latitude_deg = `DEEPDISCOVERERNAV01_23975_Latitude`,
-           longitude_deg = `DEEPDISCOVERERNAV01_23975_Longitude`,
-           oxygen_mgl = `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
-           temp_degC = `SBECTD9PLUSDEEPDISCOVERER_23978_Temperature`,
-           depth_m = `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
-           salinity_psu = `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`,
-           biota = `Biota`,
-           taxonomy = `Taxonomy`,
-           phylum = `Phylum`,
-           class = `Class`,
-           order = `Order`,
-           family = `Family`,
-           genus = `Genus`,
-           species = `Species`,
-           component = `Component`) |> 
-    mutate(dive_number = toupper(dive_number)) |> 
-    mutate(dive_number = gsub("DIVE","",dive_number)) |> 
-    mutate(dive_number = as.numeric(dive_number)) |> 
-    filter(taxonomy %in% c("WoRMS","WoRDSS","CMECS"))
-}
-
 #set working directory
 wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
 setwd(wd)
@@ -233,15 +156,6 @@ write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name,
 
 #------------------------------------------------------------------------------
 
-#function to calculate number of unique taxa at each taxonomic level for an
-#individual dive
-
-taxonomy_count <- function(x) { 
-  x |> 
-    summarize(
-      across(phylum:species, \(x) n_distinct(x, na.rm = TRUE))
-    )
-}
 
 #Pulls out just the dive number and taxonomy columns, counts the number of 
 #unique values at each taxonomic level. Added new columns that normalize the
