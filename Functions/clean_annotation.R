@@ -38,5 +38,5 @@ clean_annotation <- function(x) {
     mutate(dive_number = toupper(dive_number)) |> 
     mutate(dive_number = gsub("DIVE","",dive_number)) |> 
     mutate(dive_number = as.numeric(dive_number)) |> 
-    filter(taxonomy %in% c("WoRMS","WoRDSS","CMECS"))
+    filter(taxonomy %in% c("WoRMS","WoRDSS","CMECS", "Simplified CMECS"))
 }
