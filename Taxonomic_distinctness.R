@@ -13,15 +13,20 @@ library(stringr)
 #could be easily adapted to select just the water column portion of the dive
 #if that would be useful.
 
+#source functions
+function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_biodiversity/Functions/", 
+                        pattern = "[.]R$", full.names = TRUE)
+lapply(function_names, source)
+
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX1803"
+data_name <- "EX2104"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(3,4,5,6,7,8,9,10,11,12,13,14,15) #this needs updating for each
+dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
@@ -118,7 +123,7 @@ View(biological_annotations)
 #optional code below to update dive list and filter for just dives with full
 #annotations
 
-dives<-c(3,4,5,6,7,8,9,10,11,12,13,14,15)
+dives<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
 biological_annotations <- biological_annotations |> 
   filter(dive_number %in% dives)
 
