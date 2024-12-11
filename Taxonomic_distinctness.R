@@ -30,137 +30,22 @@ dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs upda
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
+benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
+                                            data_name, ".csv"), col_names = TRUE)
+
 #------------------------------------------------------------------------------
-#Read in annotation file and apply clean function
-#This can accommodate a single .csv with all dives or a group of annotation 
-#files saved locally as .csv exports from SeaTube. Uses the number of files
-#in the annotation folder to determine which import process to execute.
-
-annotation_paths<-list.files(paste0(wd, "/annotations"), 
-  pattern = "[.]csv$", full.names = TRUE)
-
-if (length(annotation_paths > 1)) {
-  annotation_list<-purrr::map(annotation_paths, 
-                       \(x) readr::read_csv(x, col_names = TRUE, na = ""))
-  
-  annotation_clean<- annotation_list |> 
-    purrr::map(clean_annotation) |> 
-    list_rbind()
-  
-} else {
-  annotation_import <- readr::read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
-                                       data_name, ".csv"), col_names = TRUE, 
-                                na = "")
-  annotation_clean <- clean_annotation(annotation_import)
-}
-
-View(annotation_clean)
-
-#-------------------------------------------------------------------------------
-
-#Use function described above to get start and end times for the benthic
-#portion of individual dives. Apply these functions across a group of dive 
-#summary .txt files stored locally. Create a dataframe that contains dive number
-#plus benthic start and end times for the group of dives. If/else conditional
-#accommodates for formatting changes made to dive summaries after 2020
-
-dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"), 
-  pattern = "[.]txt$", full.names = TRUE)
-
-if (annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_start_list<-purrr::map(dive_summary_paths, 
-                          \(x) import_benthic_start_pre2020(x))
-} else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_start_list<-purrr::map(dive_summary_paths, 
-                          \(x) import_benthic_start_post2020(x))
-}
-
-if (annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_end_list<-purrr::map(dive_summary_paths, 
-                        \(x) import_benthic_end_pre2020(x))
-} else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_end_list<-purrr::map(dive_summary_paths, 
-                        \(x) import_benthic_end_post2020(x))
-}
-
-benthic_start<- as.POSIXct(unlist(benthic_start_list))
-benthic_end<- as.POSIXct(unlist(benthic_end_list))
-
-benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
-
-#Joins the clean annotations dataframe to the benthic times dataframe 
-#and then filters the annotations data to only include the benthic portion of
-#each dive. This join also removes any dives with no corresponding dive summary
-#file (e.g. test dives, UCH dives)
-
-benthic_join<-dplyr::left_join(annotation_clean, benthic_times, 
-                        join_by("dive_number" == "dive_number"))
-
-benthic_annotations<- benthic_join |> 
-  dplyr::group_by(dive_number) |> 
-  dplyr::filter(date_time>=benthic_start & date_time<=benthic_end) |> 
-  dplyr::ungroup()
-View(benthic_annotations)
-
-#QAQC STEP: overall summary statistics for the dive and annotations
-
-substrate_annotations <- benthic_annotations |> 
-  dplyr::filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
-  dplyr::select("dive_number", "component") |> 
-  dplyr::group_by(dive_number) |> 
-  dplyr::summarize(geoform_or_substrate = sum(!is.na(component)))
-View(substrate_annotations)
-
-biological_annotations <- benthic_annotations |>
-  dplyr::filter(biota == "Biota") |> 
-  dplyr::select("dive_number","species","genus","family","order","class","phylum") |> 
-  dplyr::group_by(dive_number) |>
-  dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
-View(biological_annotations)
-#STOP HERE and check the summary_stats output for QAQC before continuing with 
-#the taxonomic distinctness analysis. Sometimes dives only have a few 
-#annotations even if they are not labeled as test dives. If necessary, use 
-#optional code below to update dive list and filter for just dives with full
-#annotations
+#BEFORE RUNNING THIS CODE, check the summary statistics and decide which dives
+#to include in the analysis. 
 
 dives<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
-biological_annotations <- biological_annotations |> 
-  dplyr::filter(dive_number %in% dives)
 
 #if necessary, filter the benthic_annotations data frame before continuing
 #with taxonomic distinctness calculation
 benthic_annotations <- benthic_annotations |> 
   dplyr::filter(dive_number %in% dives)
 
-write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
-                                      data_name, ".csv"), row.names = FALSE)
-
-#if necessary, select subset of benthic start and end times below
-#this could use some work to automate - maybe try adding dive number to
-#benthic_start and benthic_end and do a join instead of cbind so that I don't
-#have to manually update this part of the code
-bottom_time_hours <- difftime(benthic_end, benthic_start, units = "hours")
-
-if (annotation_clean$date_time[1] > "2020-01-01") {
-  distance<-purrr::map(dive_summary_paths, 
-                        \(x) import_distance_traveled_post2020(x))
-  summary_stats <- cbind(biological_annotations, bottom_time_hours, 
-                         distance_traveled_m = unlist(distance))
-} else {
-summary_stats <- cbind(biological_annotations, bottom_time_hours)
-}
-
-summary_stats<-dplyr::left_join(summary_stats, substrate_annotations, 
-                        join_by("dive_number" == "dive_number"))
-
-View(summary_stats)
-write.csv(summary_stats, paste0(wd, "/exports/summary_stats_", data_name, 
-                                ".csv"),row.names = FALSE)
-#phylum represents total biological annotations because each annotation has a 
-#minimum identification to the phylum level
 
 #------------------------------------------------------------------------------
-
 
 #Pulls out just the dive number and taxonomy columns, counts the number of 
 #unique values at each taxonomic level. Added new columns that normalize the
