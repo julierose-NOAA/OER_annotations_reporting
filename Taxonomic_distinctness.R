@@ -100,7 +100,7 @@ View(benthic_annotations)
 #QAQC STEP: overall summary statistics for the dive and annotations
 
 substrate_annotations <- benthic_annotations |> 
-  filter(taxonomy == "CMECS") |> 
+  filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
   select("dive_number", "component") |> 
   group_by(dive_number) |> 
   summarize(geoform_or_substrate = sum(!is.na(component)))
