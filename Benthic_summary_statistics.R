@@ -35,13 +35,13 @@ biological_annotations <- benthic_annotations |>
   dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
 
-#if necessary, select subset of benthic start and end times below
-#this could use some work to automate - maybe try adding dive number to
-#benthic_start and benthic_end and do a join instead of cbind so that I don't
-#have to manually update this part of the code
-bottom_time_hours <- difftime(benthic_end, benthic_start, units = "hours")
-#this needs fixing because benthic_end and benthic_start are from the cleaning
-#script
+#calculate time on bottom based on benthic start and benthic end columns from
+#the benthic_annotations data frame
+bottom_time_hours <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::reframe(bottom_time = difftime(benthic_end, benthic_start, 
+                                        units = "hours")) |> 
+  dplyr::distinct()
 
 if (benthic_annotations$date_time[1] > "2020-01-01") {
   distance<-purrr::map(dive_summary_paths, 
