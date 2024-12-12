@@ -35,29 +35,41 @@ biological_annotations <- benthic_annotations |>
   dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
 
+#count annotations by dive for major phyla of interest to OER
+interesting_phyla_count <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::summarize(Cnidaria = sum(phylum == "Cnidaria", na.rm = TRUE),
+                   Echinodermata = sum(phylum == "Echinodermata", na.rm = TRUE),
+                   Porifera = sum(phylum == "Porifera", na.rm = TRUE),
+                   Chordata = sum(phylum == "Chordata", na.rm = TRUE))
+
 #calculate time on bottom based on benthic start and benthic end columns from
 #the benthic_annotations data frame
 bottom_time_hours <- benthic_annotations |> 
   dplyr::group_by(dive_number) |> 
-  dplyr::reframe(bottom_time = difftime(benthic_end, benthic_start, 
+  dplyr::reframe(bottom_time_hours = difftime(benthic_end, benthic_start, 
                                         units = "hours")) |> 
   dplyr::distinct()
 
-#Combine biological annotations with bottom time and if post-2020, also extract 
-#and add ROV distance traveled
+#If post-2020, extract ROV distance traveled from the dive summary .txt files
+#and combine with ROV bottom time into new ROV_metrics data frame, if pre-2020
+#just rename bottom_time_hours to ROV_metrics
 if (benthic_annotations$date_time[1] > "2020-01-01") {
   distance<-purrr::map(dive_summary_paths, 
                        \(x) import_distance_traveled_post2020(x))
-  summary_statistics <- cbind(biological_annotations, bottom_time_hours, 
-                         distance_traveled_m = unlist(distance))
+  ROV_metrics <- cbind(bottom_time_hours, 
+                              distance_traveled_m = unlist(distance))
 } else {
-  summary_statistics <- cbind(biological_annotations, bottom_time_hours)
+  ROV_metrics <- bottom_time_hours
 }
 
-#Add substrate annotations to data frame using a join
-summary_statistics<-dplyr::left_join(summary_stats, substrate_annotations, 
-                                join_by("dive_number" == "dive_number"))
+#Join counts of biological annotations by taxonomy, counts of interesting phyla,
+#counts of substrate annotations, and ROV dive information based on dive number
+
+summary_statistics <- list(biological_annotations, interesting_phyla_count, 
+                           substrate_annotations, ROV_metrics) |> 
+  purrr::reduce(dplyr::left_join, by = "dive_number")
 
 View(summary_statistics)
-write.csv(summary_statistics, paste0(wd, "/exports/summary_stats_", data_name, 
+write.csv(summary_statistics, paste0(wd, "/exports/summary_statistics_", data_name, 
                                 ".csv"),row.names = FALSE)
