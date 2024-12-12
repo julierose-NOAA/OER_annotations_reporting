@@ -43,6 +43,8 @@ bottom_time_hours <- benthic_annotations |>
                                         units = "hours")) |> 
   dplyr::distinct()
 
+#Combine biological annotations with bottom time and if post-2020, also extract 
+#and add ROV distance traveled
 if (benthic_annotations$date_time[1] > "2020-01-01") {
   distance<-purrr::map(dive_summary_paths, 
                        \(x) import_distance_traveled_post2020(x))
@@ -52,6 +54,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
   summary_statistics <- cbind(biological_annotations, bottom_time_hours)
 }
 
+#Add substrate annotations to data frame using a join
 summary_statistics<-dplyr::left_join(summary_stats, substrate_annotations, 
                                 join_by("dive_number" == "dive_number"))
 
