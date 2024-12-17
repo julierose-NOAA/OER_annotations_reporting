@@ -43,6 +43,22 @@ interesting_phyla_count <- benthic_annotations |>
                    Porifera = sum(phylum == "Porifera", na.rm = TRUE),
                    Chordata = sum(phylum == "Chordata", na.rm = TRUE))
 
+#compare relative contributions of observed phyla to counts of total biological
+#annotations
+phyla_frequency <- benthic_annotations |> 
+  dplyr::filter(biota == "Biota") |>
+  tidyr::drop_na(phylum) |> 
+  dplyr::group_by(dive_number,phylum) |> 
+  dplyr::summarize(count = dplyr::n()) |> 
+  dplyr::left_join(y=biological_annotations, by = "dive_number") |> 
+  dplyr::mutate(percent = count/phylum.y*100) |> 
+  dplyr::select(dive_number, phylum = phylum.x, count, percent)
+
+#quick visualization - colors need improvement
+library(ggplot2)
+ggplot(phyla_frequency, aes(fill = phylum.x, x = dive_number, y = percent)) +
+  geom_bar(position = "stack", stat = "identity")
+
 #calculate time on bottom based on benthic start and benthic end columns from
 #the benthic_annotations data frame
 bottom_time_hours <- benthic_annotations |> 
