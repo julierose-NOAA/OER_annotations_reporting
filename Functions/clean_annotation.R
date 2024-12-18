@@ -13,8 +13,8 @@ clean_annotation <- function(x) {
            `SBECTD9PLUSDEEPDISCOVERER_23978_Temperature`,
            `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
            `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`, 
-           `Biota`,`Taxonomy`, `Phylum`, `Class`, `Order`, `Family`, `Genus`, 
-           `Species`,`Component`) |> 
+           `Biota`,`Taxonomy`, `Kingdom`, `Phylum`, `Class`, `Order`, `Family`,
+           `Genus`, `Species`,`Component`) |> 
     dplyr::mutate(across(`Dive Name`, \(x) stringr::str_replace(x, "-", "_"))) |>
     dplyr::mutate(across(`Dive Name`, \(x) stringr::word(x,1))) |> 
     tidyr::separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
@@ -28,6 +28,7 @@ clean_annotation <- function(x) {
            salinity_psu = `SBECTD9PLUSDEEPDISCOVERER_23978_Practical Salinity`,
            biota = `Biota`,
            taxonomy = `Taxonomy`,
+           kingdom = `Kingdom`,
            phylum = `Phylum`,
            class = `Class`,
            order = `Order`,
