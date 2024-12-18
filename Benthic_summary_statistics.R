@@ -43,6 +43,14 @@ interesting_phyla_count <- benthic_annotations |>
                    Porifera = sum(phylum == "Porifera", na.rm = TRUE),
                    Chordata = sum(phylum == "Chordata", na.rm = TRUE))
 
+#count number of biological annotations that are identified as animals but have
+#no phylum-level identification
+unidentified_animalia <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::filter(biota == "Biota", is.na(phylum), kingdom == "Animalia") |> 
+  dplyr::summarize(Unidentified_Biota = dplyr::n())
+View(unidentified_animalia)
+
 #compare relative contributions of observed phyla to counts of total biological
 #annotations
 phyla_frequency <- benthic_annotations |> 
@@ -56,7 +64,7 @@ phyla_frequency <- benthic_annotations |>
 
 #quick visualization - colors need improvement
 library(ggplot2)
-ggplot(phyla_frequency, aes(fill = phylum.x, x = dive_number, y = percent)) +
+ggplot(phyla_frequency, aes(fill = phylum, x = dive_number, y = percent)) +
   geom_bar(position = "stack", stat = "identity")
 
 #calculate time on bottom based on benthic start and benthic end columns from
@@ -82,8 +90,9 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
-summary_statistics <- list(biological_annotations, interesting_phyla_count, 
-                           substrate_annotations, ROV_metrics) |> 
+summary_statistics <- list(biological_annotations, unidentified_animalia, 
+                           interesting_phyla_count, substrate_annotations, 
+                           ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
 View(summary_statistics)
