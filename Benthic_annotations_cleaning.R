@@ -31,7 +31,7 @@ if (length(annotation_paths > 1)) {
   
   annotation_clean<- annotation_list |> 
     purrr::map(clean_annotation) |> 
-    list_rbind()
+    purrr::list_rbind()
   
 } else {
   annotation_import <- readr::read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
