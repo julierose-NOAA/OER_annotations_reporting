@@ -79,7 +79,7 @@ benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 #file (e.g. test dives, UCH dives).
 
 benthic_join<-dplyr::left_join(annotation_clean, benthic_times, 
-                               join_by("dive_number" == "dive_number"))
+                               dplyr::join_by("dive_number" == "dive_number"))
 
 benthic_annotations<- benthic_join |> 
   dplyr::group_by(dive_number) |> 
