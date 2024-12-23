@@ -95,6 +95,9 @@ summary_statistics <- list(biological_annotations, unidentified_animalia,
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
+#replace NA with 0 across whole data frame
+summary_statistics[is.na(summary_statistics)] = 0
+
 View(summary_statistics)
 write.csv(summary_statistics, paste0(wd, "/exports/summary_statistics_", data_name, 
                                 ".csv"),row.names = FALSE)
