@@ -62,10 +62,23 @@ phyla_frequency <- benthic_annotations |>
   dplyr::mutate(percent = count/phylum.y*100) |> 
   dplyr::select(dive_number, phylum = phylum.x, count, percent)
 
-#quick visualization - colors need improvement
+#creates a data frame with every phylum observed in the overall expedition for 
+#each dive with value = 0 filled in - need this for the heatmap visual
+phyla_frequency_percent_all <- phyla_frequency |> 
+  dplyr::select(!count) |> 
+  tidyr::pivot_wider(names_from = dive_number, values_from = c(percent), 
+                     values_fill = 0) |> 
+  tidyr::pivot_longer(!phylum, names_to = "dive_number", values_to = "percent")
+
+#quick visualization - colors still need improvement but the heatmap works 
+#better than the stacked bar when there are >7 phyla
+#also need to convert dive number to factor for reordering
 library(ggplot2)
-ggplot(phyla_frequency, aes(fill = phylum, x = dive_number, y = percent)) +
-  geom_bar(position = "stack", stat = "identity")
+ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phylum)) +
+  geom_tile(color = "white", aes(width = 0.85, height = 0.999)) +
+  viridis::scale_fill_viridis() +
+  theme(panel.border = element_rect(fill = NA, color = alpha("black", 0.5)))
+
 
 #calculate time on bottom based on benthic start and benthic end columns from
 #the benthic_annotations data frame
