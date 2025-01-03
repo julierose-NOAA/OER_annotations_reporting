@@ -68,24 +68,8 @@ phyla_frequency_percent_all <- phyla_frequency |>
   dplyr::select(!count) |> 
   tidyr::pivot_wider(names_from = dive_number, values_from = c(percent), 
                      values_fill = 0) |> 
-  tidyr::pivot_longer(!phylum, names_to = "dive_number", values_to = "percent") |> 
-  dplyr::mutate(phylum = as.factor(phylum),
-                dive_number = as.factor(dive_number)) |> 
-  dplyr::mutate(dive_number = forcats::fct_inseq(dive_number))
-
-#quick visualization - colors still need improvement but the heatmap works 
-#better than the stacked bar when there are >7 phyla
-#also need to convert dive number to factor for reordering
-library(ggplot2)
-ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, 
-                                        y = phylum)) +
-  geom_tile(color = "white", aes(width = 0.85, height = 0.999)) +
-  scale_fill_gradient(low = "white", high = "#003087", guide = "legend",
-                      name = "Percent") +
-  theme(panel.border = element_rect(fill = NA, color = alpha("black", 0.5))) +
-  labs(title = "Phylum-Level Community Composition\n by Dive Number", 
-       x = "Dive Number", y = "Phylum")
-
+  tidyr::pivot_longer(!phylum, names_to = "dive_number", values_to = "percent")
+  
 #calculate time on bottom based on benthic start and benthic end columns from
 #the benthic_annotations data frame
 bottom_time_hours <- benthic_annotations |> 
@@ -120,3 +104,6 @@ summary_statistics[is.na(summary_statistics)] = 0
 View(summary_statistics)
 write.csv(summary_statistics, paste0(wd, "/exports/summary_statistics_", data_name, 
                                 ".csv"),row.names = FALSE)
+
+write.csv(phyla_frequency_percent_all, paste0(wd, "/exports/phyla_frequency_percent_all_", data_name, 
+                                     ".csv"),row.names = FALSE)
