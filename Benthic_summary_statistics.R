@@ -76,7 +76,7 @@ phyla_frequency_percent_all <- phyla_frequency |>
 library(ggplot2)
 ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phylum)) +
   geom_tile(color = "white", aes(width = 0.85, height = 0.999)) +
-  viridis::scale_fill_viridis() +
+  scale_fill_gradient(low = "white", high = "#003087", guide = "legend") +
   theme(panel.border = element_rect(fill = NA, color = alpha("black", 0.5)))
 
 
