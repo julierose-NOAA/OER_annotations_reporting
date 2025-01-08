@@ -4,19 +4,20 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2104"
-
-#create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
-#analysis with the corresponding dives; it would be nice to extract this from
-#the clean_annotations data frame or from the dive summaries themselves
+data_name <- "EX2107"
 
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                        data_name, ".csv"), col_names = TRUE)
+
+dive_number<-unique(benthic_annotations$dive_number)
+dive_number #stop here and cross-reference with dive summary text files - remove
+#text files that have no annotations from the folder or else the ROV_metrics 
+#code below will fail
+
 View(benthic_annotations)
 #-------------------------------------------------------------------------------
 
@@ -81,6 +82,9 @@ bottom_time_hours <- benthic_annotations |>
 #If post-2020, extract ROV distance traveled from the dive summary .txt files
 #and combine with ROV bottom time into new ROV_metrics data frame, if pre-2020
 #just rename bottom_time_hours to ROV_metrics
+dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"), 
+                               pattern = "[.]txt$", full.names = TRUE)
+
 if (benthic_annotations$date_time[1] > "2020-01-01") {
   distance<-purrr::map(dive_summary_paths, 
                        \(x) import_distance_traveled_post2020(x))
