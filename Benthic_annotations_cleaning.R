@@ -4,14 +4,14 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2104"
+data_name <- "EX2107"
 
 #create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
+dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) #this needs updating for each
 #analysis with the corresponding dives; it would be nice to extract this from
 #the clean_annotations data frame or from the dive summaries themselves
 
