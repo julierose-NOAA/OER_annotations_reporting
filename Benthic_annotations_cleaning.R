@@ -87,5 +87,6 @@ benthic_annotations<- benthic_join |>
   dplyr::ungroup()
 View(benthic_annotations)
 
+dir.create(paste0(wd,"/exports/"))
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
                                       data_name, ".csv"), row.names = FALSE)
