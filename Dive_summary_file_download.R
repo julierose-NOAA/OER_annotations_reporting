@@ -38,3 +38,6 @@ unlink(x = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/
 }
 
 
+#check out direct links with no zip folders here
+#https://oer.hpc.msstate.edu/okeanos/
+
