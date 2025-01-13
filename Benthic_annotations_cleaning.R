@@ -10,10 +10,14 @@ setwd(wd)
 #set standard name to refer to your data
 data_name <- "EX2107"
 
-#create vector of dive numbers for your dataset
-dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) #this needs updating for each
-#analysis with the corresponding dives; it would be nice to extract this from
-#the clean_annotations data frame or from the dive summaries themselves
+#create vector of dive numbers for your dataset. The dive landing pages are a 
+#good place to find the dive numbers to start with
+#https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/
+dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) 
+
+#create a vector of character descriptors of dives, which will be used to 
+#download the dive summary text files
+dive_names <- c("DIVE01", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE07", "DIVE08", "DIVE09", "DIVE10", "DIVE11", "DIVE12", "DIVE13", "DIVE14")
 
 #------------------------------------------------------------------------------
 
@@ -41,6 +45,23 @@ if (length(annotation_paths > 1)) {
 }
 
 View(annotation_clean)
+
+#-------------------------------------------------------------------------------
+#Download dive summary text files for use in extracting the benthic portion of
+#the dive, save to new subdirectory within the existing expedition directory
+data_name_lower <- tolower(data_name)
+dir.create(paste0(wd,"/dive_summaries/"))
+
+#This downloads available dive summary .txt files based on the dive name vector 
+#above and prints an error if one is missing (UCH dives do not have dive summary 
+#.txt files)
+dive_summary_file_QAQC(dive_names)
+
+#stop here and see if there are any missing dive summaries based on the output
+#of the above code; update dive_names and dive_number if needed or else the code 
+#below will be interrupted by a missing zip folder
+
+dive_summary_file_extraction(dive_names)
 
 #-------------------------------------------------------------------------------
 #Apply the custom import functions across a group of dive summary .txt files 
