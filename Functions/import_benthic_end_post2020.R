@@ -3,6 +3,10 @@
 
 import_benthic_end_post2020 <- function(filename) {
   dive_summary <- scan(filename, what = 'character', skip = 3, sep="")
-  end_benthic <- as.POSIXct(dive_summary[15], tz="UTC", 
+  if(dive_summary[9] == "N/A") {
+    print("Warning: Not a benthic dive")
+  }
+  else (end_benthic <- as.POSIXct(dive_summary[15], tz="UTC", 
                             format = "%Y-%m-%dT%H:%M:%OS")
+  )
 }

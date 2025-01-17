@@ -88,6 +88,13 @@ if (annotation_clean$date_time[1] < "2020-01-01") {
                                \(x) import_benthic_end_post2020(x))
 }
 
+
+#Stop here and look at the output. Are there any warnings that the dataset
+#contains dives that were not benthic? If so, update the dive number list above
+
+#Still need to remove "Not a benthic dive" from the lists themselves before
+#proceeding
+
 benthic_start<- as.POSIXct(unlist(benthic_start_list))
 benthic_end<- as.POSIXct(unlist(benthic_end_list))
 
