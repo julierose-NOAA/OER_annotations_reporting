@@ -13,7 +13,7 @@ data_name <- "EX2107"
 #create vector of dive numbers for your dataset. The dive landing pages are a 
 #good place to find the dive numbers to start with
 #https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/
-dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,13,14) 
+dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,14) 
 
 #create a vector of character descriptors of dives, which will be used to 
 #download the dive summary text files
@@ -77,7 +77,7 @@ if (annotation_clean$date_time[1] < "2020-01-01") {
                                  \(x) import_benthic_start_pre2020(x))
 } else if (annotation_clean$date_time[1] > "2020-01-01") {
   benthic_start_list<-purrr::map(dive_summary_paths, 
-                                 \(x) import_benthic_start_post2020(x))
+                                 \(x) import_benthic_start_post2020(x)) 
 }
 
 if (annotation_clean$date_time[1] < "2020-01-01") {
@@ -88,15 +88,20 @@ if (annotation_clean$date_time[1] < "2020-01-01") {
                                \(x) import_benthic_end_post2020(x))
 }
 
-
 #Stop here and look at the output. Are there any warnings that the dataset
 #contains dives that were not benthic? If so, update the dive number list above
 
-#Still need to remove "Not a benthic dive" from the lists themselves before
-#proceeding
+#Code below collapses list to a vector, removes any warnings that may be
+#present, and converts character datetime to POSIX datetime
+benthic_start <- benthic_start_list |> 
+  sapply(paste) |> 
+  stringr::str_subset("Not a benthic dive", negate = TRUE) |> 
+  as.POSIXlt(tz = "UTC", format = "%Y-%m-%d %H:%M:%OS")
 
-benthic_start<- as.POSIXct(unlist(benthic_start_list))
-benthic_end<- as.POSIXct(unlist(benthic_end_list))
+benthic_end <- benthic_end_list |> 
+  sapply(paste) |> 
+  stringr::str_subset("Not a benthic dive", negate = TRUE) |> 
+  as.POSIXlt(tz = "UTC", format = "%Y-%m-%d %H:%M:%OS")
 
 benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 
@@ -104,9 +109,9 @@ benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 #Joins the clean annotations dataframe to the benthic times dataframe 
 #and then filters the annotations data to only include the benthic portion of
 #each dive. This join also removes any dives with no corresponding dive summary
-#file (e.g. test dives, UCH dives).
+#file (e.g. test dives, UCH dives, mid-water-only dives).
 
-benthic_join<-dplyr::left_join(annotation_clean, benthic_times, 
+benthic_join<-dplyr::inner_join(annotation_clean, benthic_times, 
                                dplyr::join_by("dive_number" == "dive_number"))
 
 benthic_annotations<- benthic_join |> 
