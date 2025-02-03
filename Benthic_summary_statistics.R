@@ -4,11 +4,11 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2107"
+data_name <- "EX1903L2"
 
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                        data_name, ".csv"), col_names = TRUE)

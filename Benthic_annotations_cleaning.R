@@ -4,20 +4,20 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2107"
+data_name <- "EX1903L2"
 
 #create vector of dive numbers for your dataset. The dive landing pages are a 
 #good place to find the dive numbers to start with
 #https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/
-dive_number<-c(1,3,4,5,6,7,8,9,10,11,12,14) 
+dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) 
 
 #create a vector of character descriptors of dives, which will be used to 
 #download the dive summary text files
-dive_names <- c("DIVE01", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE07", "DIVE08", "DIVE09", "DIVE10", "DIVE11", "DIVE12", "DIVE13", "DIVE14")
+dive_names <- c("DIVE01","DIVE02", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE07", "DIVE08", "DIVE09", "DIVE10", "DIVE11", "DIVE12", "DIVE13", "DIVE14", "DIVE15", "DIVE16", "DIVE17","DIVE18","DIVE19")
 
 #------------------------------------------------------------------------------
 
