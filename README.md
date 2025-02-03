@@ -1,4 +1,4 @@
-# OER biodiversity analysis
+# OER annotations reporting
 Uses locally stored SeaTube annotation .csv files and OER dive summary .txt files. Annotations can be groups of dives saved as single .csv files or a combined .csv file with multiple dives
 Uses dive summary .txt files to filter for the benthic portion of each individual dive within the group
 
