@@ -21,6 +21,11 @@ dive_number #stop here and cross-reference with dive summary text files - remove
 View(benthic_annotations)
 #-------------------------------------------------------------------------------
 
+#Datetime when the ROV initiated on bottom ops
+benthic_start <- benthic_annotations |> 
+  dplyr::select("dive_number", "benthic_start") |> 
+  dplyr::distinct()
+
 #Overall summary statistics for substrate and biological annotations
 substrate_annotations <- benthic_annotations |> 
   dplyr::filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
@@ -97,13 +102,18 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
-summary_statistics <- list(biological_annotations, unidentified_animalia, 
+summary_statistics <- list(benthic_start, biological_annotations, unidentified_animalia, 
                            interesting_phyla_count, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
 #replace NA with 0 across whole data frame
 summary_statistics[is.na(summary_statistics)] = 0
+
+#add expedition column to aid in future cross-expedition synthesis
+summary_statistics <- summary_statistics |> 
+  dplyr::mutate(expedition = data_name) |> 
+  dplyr::relocate(expedition, .before = dive_number)
 
 View(summary_statistics)
 write.csv(summary_statistics, paste0(wd, "/exports/summary_statistics_", data_name, 
