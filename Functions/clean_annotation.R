@@ -6,7 +6,7 @@
 
 clean_annotation <- function(x) { 
   x |> 
-    dplyr::select(`Dive Name`, `Start Date`, `Annotation ID`, 
+    dplyr::select(`Dive Name`, `Start Date`, `Annotation ID`, `To Be Reviewed`,
            `DEEPDISCOVERERNAV01_23975_Latitude`,
            `DEEPDISCOVERERNAV01_23975_Longitude`,
            `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
@@ -17,9 +17,10 @@ clean_annotation <- function(x) {
            `Genus`, `Species`,`Component`) |> 
     dplyr::mutate(across(`Dive Name`, \(x) stringr::str_replace(x, "-", "_"))) |>
     dplyr::mutate(across(`Dive Name`, \(x) stringr::word(x,1))) |> 
-    tidyr::separate(`Dive Name`, c("cruise","dive_number"), sep = "_") |> 
+    tidyr::separate(`Dive Name`, c("expedition","dive_number"), sep = "_") |> 
     dplyr::rename(date_time = `Start Date`,
            annotation_ID = `Annotation ID`,
+           flagged_for_review = `To Be Reviewed`,
            latitude_deg = `DEEPDISCOVERERNAV01_23975_Latitude`,
            longitude_deg = `DEEPDISCOVERERNAV01_23975_Longitude`,
            oxygen_mgl = `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
