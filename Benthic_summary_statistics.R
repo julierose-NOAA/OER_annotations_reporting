@@ -41,6 +41,11 @@ biological_annotations <- benthic_annotations |>
   dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
 
+#percentage of annotations flagged for review
+percent_flagged <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::summarize(percent_flagged = sum(flagged_for_review)/dplyr::n()*100)
+
 #count annotations by dive for major phyla of interest to OER
 interesting_phyla_count <- benthic_annotations |> 
   dplyr::group_by(dive_number) |> 
@@ -102,7 +107,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
-summary_statistics <- list(benthic_start, biological_annotations, unidentified_animalia, 
+summary_statistics <- list(benthic_start, biological_annotations, percent_flagged, unidentified_animalia, 
                            interesting_phyla_count, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
