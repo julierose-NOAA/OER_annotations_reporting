@@ -1,5 +1,5 @@
 #source functions
-function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_biodiversity/Functions/", 
+function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_annotations_reporting/Functions/", 
                              pattern = "[.]R$", full.names = TRUE)
 lapply(function_names, source)
 
