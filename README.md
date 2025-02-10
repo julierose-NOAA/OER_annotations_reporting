@@ -1,5 +1,6 @@
 # OER annotations reporting
-Uses locally stored SeaTube annotation .csv files Annotations can be groups of dives saved as single .csv files or a combined .csv file with multiple dives
+Uses locally stored SeaTube annotation .csv files Annotations can be groups of dives saved as single .csv files or a combined .csv file with multiple dives. 
+
 Pulls dive summary .txt files from [NCEI](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) to filter for the benthic portion of each individual dive within the group.
 
 
