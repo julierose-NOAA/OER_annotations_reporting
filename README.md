@@ -3,7 +3,7 @@ Uses locally stored SeaTube annotation .csv files Annotations can be groups of d
 
 Pulls dive summary .txt files from [NCEI](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) to filter for the benthic portion of each individual dive within the group.
 
-
+![Workflow](Images/annotations_report_workflow.png)
 
 Scripts are provided for the following: 
 1. Benthic_anntations_cleaning: import local SeaTube annotation .csv files, extract annotation taxonomy and relevant ancillary ROV and environmental data, automatically download corresponding dive summary .txt files, use these .txt files to select only the annotations made while the ROV was on the seafloor, and create output .csv file of cleaned benthic annotations for use in the summary statistics and taxonomic distinctness scripts
