@@ -7,6 +7,7 @@
 clean_annotation <- function(x) { 
   x |> 
     dplyr::select(`Dive Name`, `Start Date`, `Annotation ID`, `To Be Reviewed`,
+                  `Comment`,
            `DEEPDISCOVERERNAV01_23975_Latitude`,
            `DEEPDISCOVERERNAV01_23975_Longitude`,
            `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
@@ -21,6 +22,7 @@ clean_annotation <- function(x) {
     dplyr::rename(date_time = `Start Date`,
            annotation_ID = `Annotation ID`,
            flagged_for_review = `To Be Reviewed`,
+           comment = `Comment`,
            latitude_deg = `DEEPDISCOVERERNAV01_23975_Latitude`,
            longitude_deg = `DEEPDISCOVERERNAV01_23975_Longitude`,
            oxygen_mgl = `SBECTD9PLUSDEEPDISCOVERER_23978_Oxygen Concentration`,
