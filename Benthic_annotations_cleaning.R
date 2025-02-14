@@ -48,9 +48,11 @@ View(annotation_clean)
 
 #-------------------------------------------------------------------------------
 #Download dive summary text files for use in extracting the benthic portion of
-#the dive, save to new subdirectory within the existing expedition directory
+#the dive, and ROV tracks .csv files to calculate distance traveled metric.
+#Save to two new subdirectories within the existing expedition directory
 data_name_lower <- tolower(data_name)
 dir.create(paste0(wd,"/dive_summaries/"))
+dir.create(paste0(wd,"/ROV_tracks"))
 
 #This downloads available dive summary .txt files based on the dive name vector 
 #above and prints an error if one is missing (UCH dives do not have dive summary 
@@ -61,7 +63,7 @@ dive_summary_file_QAQC(dive_names)
 #of the above code; update dive_names and dive_number if needed or else the code 
 #below will be interrupted by a missing zip folder
 
-dive_summary_file_extraction(dive_names)
+dive_ancillary_file_extraction(dive_names)
 
 #-------------------------------------------------------------------------------
 #Apply the custom import functions across a group of dive summary .txt files 
