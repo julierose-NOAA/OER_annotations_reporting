@@ -120,6 +120,10 @@ benthic_annotations<- benthic_join |>
   dplyr::ungroup()
 View(benthic_annotations)
 
+benthic_annotations_numeric <- benthic_annotations |> 
+  dplyr::filter(grepl("\\d+", comment))
+View(benthic_annotations_numeric)
+
 dir.create(paste0(wd,"/exports/"))
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
                                       data_name, ".csv"), row.names = FALSE)
