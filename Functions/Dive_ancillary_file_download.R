@@ -25,21 +25,21 @@ if(inherits(UCH_test, "try-error")){
 
 dive_ancillary_file_extraction <- function(dive_names) {
 for(i in dive_names){
-zip_file_paths <- unzip(paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"),
-                        exdir = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/"),
-                        list = TRUE)
-
-unzip(paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"),
-      exdir = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/"),
-      files = c(zip_file_paths[2,1], zip_file_paths[7,1]))
-
-file.rename(from = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[2,1]),
-            to = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,".txt"))
-
-file.rename(from = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[7,1]),
-            to = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/ROV_tracks/ROVtrack_",i,".csv"))
-            
-unlink(x = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"), recursive = TRUE)
-unlink(x = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[1,1]), recursive = TRUE)
+  zip_file_paths <- unzip(paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"),
+                          exdir = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/"),
+                          list = TRUE)
+  
+  unzip(paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"),
+        exdir = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/"))
+  files = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[1,1],data_name,"_",i,".txt")
+  
+  file.rename(from = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[1,1],data_name,"_",i,".txt"),
+              to = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",data_name,"_",i,".txt"))
+  
+  file.rename(from = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[1,1],data_name,"_",i,"_RovTrack.csv"),
+              to = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/ROV_tracks/",data_name,"_",i,"_ROVtrack.csv"))
+  
+  unlink(x = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",i,"-ancillary-data.zip"), recursive = TRUE)
+  unlink(x = paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/",data_name,"/dive_summaries/",zip_file_paths[1,1]), recursive = TRUE)
 }
 }
