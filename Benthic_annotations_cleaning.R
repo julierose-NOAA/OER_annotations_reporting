@@ -29,26 +29,19 @@ dive_names <- c("DIVE01","DIVE02", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE
 annotation_paths<-list.files(paste0(wd, "/annotations"), 
                              pattern = "[.]csv$", full.names = TRUE)
 
-if (annotation_clean$date_time[1] < "2018-01-01" & annotation_clean$date_time[1] > "2016-12-31") {
-  benthic_start_list<-purrr::map(dive_summary_paths, 
-                                 \(x) import_benthic_start_2017(x))
-} else if (annotation_clean$date_time[1] > "2017-12-31" & annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_start_list<-purrr::map(dive_summary_paths, 
-                                 \(x) import_benthic_start_pre2020(x))
-} else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_start_list<-purrr::map(dive_summary_paths, 
-                                 \(x) import_benthic_start_post2020(x)) 
-}
-
-if (annotation_clean$date_time[1] < "2018-01-01" & annotation_clean$date_time[1] > "2016-12-31") {
-  benthic_end_list<-purrr::map(dive_summary_paths, 
-                               \(x) import_benthic_end_2017(x))
-} else if (annotation_clean$date_time[1] > "2017-12-31" & annotation_clean$date_time[1] < "2020-01-01") {
-  benthic_end_list<-purrr::map(dive_summary_paths, 
-                               \(x) import_benthic_end_pre2020(x))
-} else if (annotation_clean$date_time[1] > "2020-01-01") {
-  benthic_end_list<-purrr::map(dive_summary_paths, 
-                               \(x) import_benthic_end_post2020(x))
+if (length(annotation_paths > 1)) {
+  annotation_list<-purrr::map(annotation_paths, 
+                              \(x) readr::read_csv(x, col_names = TRUE, na = ""))
+  
+  annotation_clean<- annotation_list |> 
+    purrr::map(clean_annotation) |> 
+    purrr::list_rbind()
+  
+} else {
+  annotation_import <- readr::read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
+                                              data_name, ".csv"), col_names = TRUE, 
+                                       na = "")
+  annotation_clean <- clean_annotation(annotation_import)
 }
 
 View(annotation_clean)
