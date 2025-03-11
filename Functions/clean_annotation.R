@@ -17,6 +17,7 @@ clean_annotation <- function(x) {
            `Biota`,`Taxonomy`, `Kingdom`, `Phylum`, `Class`, `Order`, `Family`,
            `Genus`, `Species`,`Component`) |> 
     dplyr::mutate(across(`Dive Name`, \(x) stringr::str_replace(x, "-", "_"))) |>
+    dplyr::mutate(across(`Dive Name`, \(x) stringr::str_replace(x, ":", " "))) |>
     dplyr::mutate(across(`Dive Name`, \(x) stringr::word(x,1))) |> 
     tidyr::separate(`Dive Name`, c("expedition","dive_number"), sep = "_") |> 
     dplyr::rename(date_time = `Start Date`,
