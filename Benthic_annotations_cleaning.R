@@ -74,7 +74,10 @@ dive_ancillary_file_extraction(dive_names)
 dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"), 
                                pattern = "[.]txt$", full.names = TRUE)
 
-if (annotation_clean$date_time[1] < "2020-01-01") {
+if (annotation_clean$date_time[1] < "2018-01-01" & annotation_clean$date_time[1] > "2016-12-31") {
+  benthic_start_list<-purrr::map(dive_summary_paths, 
+                                 \(x) import_benthic_start_2017(x))
+} else if (annotation_clean$date_time[1] > "2017-12-31" & annotation_clean$date_time[1] < "2020-01-01") {
   benthic_start_list<-purrr::map(dive_summary_paths, 
                                  \(x) import_benthic_start_pre2020(x))
 } else if (annotation_clean$date_time[1] > "2020-01-01") {
@@ -82,13 +85,17 @@ if (annotation_clean$date_time[1] < "2020-01-01") {
                                  \(x) import_benthic_start_post2020(x)) 
 }
 
-if (annotation_clean$date_time[1] < "2020-01-01") {
+if (annotation_clean$date_time[1] < "2018-01-01" & annotation_clean$date_time[1] > "2016-12-31") {
+  benthic_end_list<-purrr::map(dive_summary_paths, 
+                               \(x) import_benthic_end_2017(x))
+} else if (annotation_clean$date_time[1] > "2017-12-31" & annotation_clean$date_time[1] < "2020-01-01") {
   benthic_end_list<-purrr::map(dive_summary_paths, 
                                \(x) import_benthic_end_pre2020(x))
 } else if (annotation_clean$date_time[1] > "2020-01-01") {
   benthic_end_list<-purrr::map(dive_summary_paths, 
                                \(x) import_benthic_end_post2020(x))
 }
+
 
 #Stop here and look at the output. Are there any warnings that the dataset
 #contains dives that were not benthic? If so, update the dive number list above
