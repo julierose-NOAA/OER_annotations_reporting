@@ -1,0 +1,355 @@
+---
+title: "EX2107: Windows to the Deep 2021: Blake Plateau"
+format:
+  docx: 
+    reference-doc: 2025_OER_for-quarto.docx
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| output: false
+
+#libraries
+library(readr)
+library(ggplot2)
+library(showtext)
+library(tidyr)
+library(dplyr)
+library(forcats)
+
+#add Roboto to showtext package
+font_add_google("Roboto", "Roboto")
+showtext_auto()
+
+#set expedition information to use throughout document
+expedition_name <- "EX2107"
+expedition_title <- "Windows to the Deep 2021: Blake Plateau"
+annotations_date <- "10-21-2024"
+#load summary statistics
+summary_statistics <- read_csv(paste0("summary_statistics_",expedition_name,".csv"),col_names = TRUE, show_col_types = FALSE)
+#load phylum frequency percent
+phyla_frequency_percent_all <- read_csv(paste0("phyla_frequency_percent_all_",expedition_name,".csv"),col_names = TRUE)
+```
+
+# Overview
+
+This report is a draft expedition-level summary of expert annotations of benthic deep-sea communities for groups of ROV dives. It provides tables and graphs of total numbers of benthic biological and geoform/substrate annotations, benthic biological annotations by taxonomic level, and ROV time on bottom.
+
+Input files are as follows:
+
+1.  SeaTube annotation .csv file. These can be accessed via the [Ocean Networks Canada website](https://data.oceannetworks.ca/SeaTubeSearch).
+2.  Dive Summary .txt files. These can be found on the [expedition's individual dive landing pages](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/), which can be accessed on the NCEI website. The .txt files are within the ROV Ancillary Data section of each dive landing page.
+
+# Annotation Information
+
+This report was generated using annotations downloaded from SeaTube on `r annotations_date`.
+
+## 
+
+```{r}
+#| echo: false
+
+OER_theme <- theme_bw() + theme(plot.title = element_text(family = "Roboto", color = "#003087", size = 16),
+        axis.title = element_text(family = "Roboto", color = "#003087", size = 12),
+        axis.text = element_text(family = "Roboto", size = 10))
+```
+
+```{r}
+#| echo: false
+#| label: ROV-time-on-bottom
+
+ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
+  geom_col(fill = "#0085CA") +
+  labs(x = "Dive Number", y = "Hours") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+bottom_min <- round(min(summary_statistics$bottom_time_hours),2)
+bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
+bottom_median <- round(median(summary_statistics$bottom_time_hours),2)
+```
+
+###### [Figure 1]{custom-style="Strong"}. ROV time on bottom in hours.
+
+ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours during `r expedition_name`, with a median time on bottom of `r bottom_median` hours.
+
+```{r}
+#| echo: false
+#| 
+#this is on hold until we decide on a strategy to obtain this metric for 
+#pre-2020 expeditions
+
+
+#if (summary_statistics$benthic_start[1] > "2020-01-01"){
+#gplot(summary_statistics, aes(x = dive_number, y = distance_traveled_m)) +
+  #geom_col(fill = "#0085CA") +
+  #labs(x = "Dive Number", y = "Meters") +
+  #scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  #OER_theme
+
+#distance_min <- min(summary_statistics$distance_traveled_m)
+#distance_max <- max(summary_statistics$distance_traveled_m)
+#distance_median <- median(summary_statistics$distance_traveled_m)
+#}
+```
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+geo_sub_annotations_min <- min(summary_statistics$geoform_or_substrate)
+geo_sub_annotations_max <- max(summary_statistics$geoform_or_substrate)
+geo_sub_annotations_median <- median(summary_statistics$geoform_or_substrate)
+```
+
+###### [Figure 2]{custom-style="Strong"}. Total geoform or substrate annotations.
+
+The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with `r geo_sub_annotations_median` being the median number of geoform and substrate annotations .
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = phylum)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+bio_annotations_min <- min(summary_statistics$phylum)
+bio_annotations_max <- max(summary_statistics$phylum)
+bio_annotations_median <- median(summary_statistics$phylum)
+```
+
+###### [Figure 3]{custom-style="Strong"}. Total biological annotations.
+
+The total number of benthic biological annotations within each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` across all dives.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Percentage of Total Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+percent_flagged_min <- round(min(summary_statistics$percent_flagged),1)
+percent_flagged_max <- round(max(summary_statistics$percent_flagged),1)
+percent_flagged_median <- round(median(summary_statistics$percent_flagged),1)
+```
+
+###### [Figure 4]{custom-style="Strong"}. Percentage of annotations flagged for review.
+
+The percentage of annotations flagged for review within each dive during `r expedition_name` ranged from `r percent_flagged_min` to `r percent_flagged_max` with a median of `r percent_flagged_median` across all dives.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+unID_bio_min <- min(summary_statistics$Unidentified_Biota)
+unID_bio_max <- max(summary_statistics$Unidentified_Biota)
+unID_bio_median <- median(summary_statistics$Unidentified_Biota)
+```
+
+###### [Figure 5]{custom-style="Strong"}. Number of unidentified biological annotations.
+
+The number of benthic biological annotations that were unable to be identified to the phylum level during `r expedition_name` varied from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` across all dives.
+
+```{r}
+#| echo: false
+
+# annotations_taxonomy <- summary_statistics |> 
+#   select("dive_number",total = "phylum","class","order","family","genus","species") |> 
+#   pivot_longer(total:species) |> 
+#   rename(taxonomic_level = name,
+#          annotation_count = value) |> 
+#   mutate(taxonomic_level = as.factor(taxonomic_level),
+#          dive_number = as.factor(dive_number)) |> 
+#   mutate(taxonomic_level = fct_relevel(taxonomic_level,
+#                                        c("total","class","order",
+#                                          "family","genus","species")))
+#View(annotations_taxonomy)
+
+# ggplot(annotations_taxonomy, aes(fill = taxonomic_level, 
+#                                  y = annotation_count,
+#                                  x = dive_number)) +
+#   geom_col(width = 1, position = "dodge2") +
+#   scale_fill_manual(values = c('#001489', '#153099', '#1d4aa8', '#1f64b8', '#1a7ec8', '#0099d8')) +
+#   #coord_flip() +
+#   labs(title = "Biological Annotations by Taxonomic Level", 
+#        x = "Dive Number", y = "Number of Annotations", fill = "Taxonomic Level") +
+#   OER_theme +
+#   theme(legend.position = "bottom",
+#         legend.title = element_text(family = "Calibri", color = "#003087", size = 10),
+#         legend.text = element_text(family = "Calibri", color = "#003087", size = 10))
+```
+
+```{r}
+#| echo: false
+
+annotations_taxonomy_percentage <- summary_statistics |> 
+  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
+  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent") |> 
+  pivot_longer(class:species) |> 
+  rename(taxonomic_level = name,
+         annotation_percentage = value) |> 
+  mutate(taxonomic_level = as.factor(taxonomic_level),
+         dive_number = as.factor(dive_number)) |> 
+  mutate(taxonomic_level = fct_relevel(taxonomic_level,
+                                       c("class","order",
+                                         "family","genus","species")))
+annotations_taxonomy_percentage[is.na(annotations_taxonomy_percentage)] = 0
+
+ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
+                                 y = annotation_percentage,
+                                 group = dive_number,
+                                 fill = taxonomic_level)) +
+         geom_col(show.legend = FALSE) +
+         facet_wrap(~ dive_number) +
+  labs(x = "Dive Number", y = "Percentage of Total Annotations") +
+  scale_fill_manual(values = c('#003087', '#1051a1', '#1b74b9', '#2698ce', '#34bddf')) +
+  theme_bw() + 
+  theme(plot.title = element_text(family = "Roboto", color = "#003087", size = 16),
+        axis.title = element_text(family = "Roboto", color = "#003087", size = 12),
+        axis.text.y = element_text(family = "Roboto", size = 8),
+        axis.text.x = element_text(family = "Roboto", size = 8, angle = -35, hjust = 0),
+        panel.grid.major.y = element_line(color = "gray50"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.margin = margin(0.5,0.5,0.5,1.5, "cm"))
+
+annotations_taxonomy_percentage_wide <- summary_statistics |> 
+  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
+  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent")
+
+annotations_taxonomy_percentage_wide[is.na(annotations_taxonomy_percentage_wide)] = 0
+
+class_min <- round(min(annotations_taxonomy_percentage_wide$class),0)
+class_max <- round(max(annotations_taxonomy_percentage_wide$class),0)
+class_median <- round(median(annotations_taxonomy_percentage_wide$class),0)
+
+order_min <- round(min(annotations_taxonomy_percentage_wide$order),0)
+order_max <- round(max(annotations_taxonomy_percentage_wide$order),0)
+order_median <- round(median(annotations_taxonomy_percentage_wide$order),0)
+
+family_min <- round(min(annotations_taxonomy_percentage_wide$family),0)
+family_max <- round(max(annotations_taxonomy_percentage_wide$family),0)
+family_median <- round(median(annotations_taxonomy_percentage_wide$family),0)
+
+genus_min <- round(min(annotations_taxonomy_percentage_wide$genus),0)
+genus_max <- round(max(annotations_taxonomy_percentage_wide$genus),0)
+genus_median <- round(median(annotations_taxonomy_percentage_wide$genus),0)
+
+species_min <- round(min(annotations_taxonomy_percentage_wide$species),0)
+species_max <- round(max(annotations_taxonomy_percentage_wide$species),0)
+species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
+```
+
+###### [Figure 6]{custom-style="Strong"}. Percentage of annotations identified to each taxonomic level
+
+One common problem in deep-sea biology is that many taxa observed in video can only be identified to high taxonomic levels, like phylum or class, and are not able to be identified to lower taxonomic levels, such as genus or species. The figure above shows the percentage of biological annotations that could be identified to each taxonomic level, from class through species, within each dive within `r expedition_name`.
+
+Across all dives, the median percentage of benthic biological annotations that could be identified to the class level was `r class_median`%, with the range `r class_min` - `r class_max`. The median percentage of benthic biological annotations that could be identified to the order level was `r order_median`%, range `r order_min` - `r order_max`. The median percentage of benthic biological annotations that could be identified to the family level was `r family_median`%, range `r family_min` - `r family_max`. The median percentage of benthic biological annotations that could be identified to the genus level was `r genus_median`%, range `r genus_min` - `r genus_max`. The median percentage of benthic biological annotations that could be identified to the species level was `r species_median`%, range `r species_min` - `r species_max`.
+
+```{r}
+#| echo: false
+phyla_frequency_percent_all <- phyla_frequency_percent_all |> 
+  mutate(dive_number = as.factor(dive_number)) |>
+  arrange(phylum)
+
+ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phylum)) +
+  geom_tile(color = "gray", aes(width = 0.85, height = 0.999)) +
+  scale_fill_gradient(low = "white", high = "#003087", guide = "legend", name = "Percent") +
+  theme(panel.border = element_rect(fill = NA, color = alpha("black", 0.5))) +
+  labs(x = "Dive Number") +
+  OER_theme +
+  theme(legend.title = element_text(color = "#003087", family = "Roboto", size = 12), legend.text = element_text(family = "Roboto", size = 8), panel.grid = element_blank(), axis.title.y = element_blank())
+
+```
+
+###### [Figure 7]{custom-style="Strong"}. Phylum-level community composition
+
+The figure above shows the phyla observed across all dives within `r expedition_name`. The color intensity indicates the relative contribution of each phylum to the total benthic biological annotations within each dive. The most common phyla observed can be identified by comparing the variation in color intensity across rows. The community composition can be compared across dives by observing the variation in color intensity across columns.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = Cnidaria)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+cnidaria_min <- min(summary_statistics$Cnidaria)
+cnidaria_max <- max(summary_statistics$Cnidaria)
+cnidaria_median <- median(summary_statistics$Cnidaria)
+```
+
+###### [Figure 8]{custom-style="Strong"}. Total Cnidaria annotations.
+
+Cnidaria is a phylum of particular interest as it contains a variety of habitat-building invertebrates commonly observed in the deep sea, including corals and sea anemones. The total number of cnidarians observed across dives within `r expedition_name` ranged from `r cnidaria_min` to `r cnidaria_max`, with a median of `r cnidaria_median`.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+porifera_min <- min(summary_statistics$Porifera)
+porifera_max <- max(summary_statistics$Porifera)
+porifera_median <- median(summary_statistics$Porifera)
+```
+
+###### [Figure 9]{custom-style="Strong"}. Total Porifera annotations.
+
+The phylum Porifera includes sponges. The total number of porifera observations across dives within `r expedition_name` ranged from `r porifera_min` to `r porifera_max`, with a median of `r porifera_median`.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+echinodermata_min <- min(summary_statistics$Echinodermata)
+echinodermata_max <- max(summary_statistics$Echinodermata)
+echinodermata_median <- median(summary_statistics$Echinodermata)
+```
+
+###### [Figure 10]{custom-style="Strong"}. Total Echinodermata Annotations.
+
+The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including seastars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms observed across dives within `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max`, with a median of `r echinodermata_median`.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = Chordata)) +
+  geom_col(fill = "#34bddf") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+
+chordata_min <- min(summary_statistics$Chordata)
+chordata_max <- max(summary_statistics$Chordata)
+chordata_median <- median(summary_statistics$Chordata)
+```
+
+###### [Figure 11]{custom-style="Strong"}. Total Chordata Annotations.
+
+The phylum Chordata contains all tunicates (Subphylum: Tunicata) and vertebrates (Subphylum: Vertebrata). Commonly observed chordates include larvaceans and fishes. The total number of chordates observed across dives within `r expedition_name` ranged from `r chordata_min` to `r chordata_max`, with a median of `r chordata_median`.
