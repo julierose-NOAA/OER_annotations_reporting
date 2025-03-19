@@ -18,3 +18,20 @@ ROV_test <- ROV_test_import |>
 #eventually add expedition and dive number
 
 View(ROV_test)
+
+#-------------------------------------------------------------------------------
+#smoothing options for lat/long because the high resolution data can be messy
+
+#every other data point
+ROV_test_half_rows <- ROV_test[seq(1, nrow(ROV_test),2), ]
+View(ROV_test_half_rows)
+
+#every fourth data point
+ROV_test_fourth_rows <- ROV_test[seq(1, nrow(ROV_test),4), ]
+View(ROV_test_fourth_rows)
+
+#running average of lat/long
+ROV_test_SMA <- ROV_test |> 
+  dplyr::mutate(Lat_SMA_4 = TTR::SMA(latitude_dd, n = 4),
+                Lon_SMA_4 = TTR::SMA(longitude_dd, n = 4)) 
+View(ROV_test_SMA)
