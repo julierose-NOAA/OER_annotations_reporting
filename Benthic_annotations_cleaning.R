@@ -25,6 +25,8 @@ dive_names <- c("DIVE01","DIVE02", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE
 #This can accommodate a single .csv containing all dives or a group of annotation 
 #files saved locally as .csv exports from SeaTube. Uses the number of files
 #in the annotation folder to determine which import process to execute.
+#If only one file is present in the folder, this code assumes that the file
+#follows the naming convention "SeaTubeAnnotations_data_name.csv".
 
 annotation_paths<-list.files(paste0(wd, "/annotations"), 
                              pattern = "[.]csv$", full.names = TRUE)
