@@ -33,19 +33,22 @@ annotation_paths<-list.files(paste0(wd, "/annotations"),
 
 if (length(annotation_paths > 1)) {
   annotation_list<-purrr::map(annotation_paths, 
-                              \(x) readr::read_csv(x, col_names = TRUE, na = ""))
+                              \(x) read.csv(x, header = TRUE, colClasses = 
+                                              c("Common.Count" = "character"), na.strings = ""))
   
   annotation_clean<- annotation_list |> 
     purrr::map(clean_annotation) |> 
     purrr::list_rbind()
   
 } else {
-  annotation_import <- readr::read_csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
-                                              data_name, ".csv"), col_names = TRUE, 
-                                       na = "")
+  annotation_import <- read.csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
+                                       data_name, ".csv"), header = TRUE, 
+                                colClasses = c("Common.Count" = "character"), na.strings = "")
   annotation_clean <- clean_annotation(annotation_import)
 }
 
+#check to make sure data imported in correct format and visually look correct
+str(annotation_clean)
 View(annotation_clean)
 
 #-------------------------------------------------------------------------------
