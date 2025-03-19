@@ -4,11 +4,11 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2107"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX1903L2"
+data_name <- "EX2107"
 
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                        data_name, ".csv"), col_names = TRUE)
@@ -51,8 +51,13 @@ interesting_phyla_count <- benthic_annotations |>
   dplyr::group_by(dive_number) |> 
   dplyr::summarize(Cnidaria = sum(phylum == "Cnidaria", na.rm = TRUE),
                    Echinodermata = sum(phylum == "Echinodermata", na.rm = TRUE),
-                   Porifera = sum(phylum == "Porifera", na.rm = TRUE),
-                   Chordata = sum(phylum == "Chordata", na.rm = TRUE))
+                   Porifera = sum(phylum == "Porifera", na.rm = TRUE))
+                  #Chordata = sum(phylum == "Chordata", na.rm = TRUE))
+  
+Chordata_subset <- benthic_annotations |>
+  dplyr::group_by(dive_number) |> 
+  dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |> 
+  dplyr::summarize(Chordata_subset = dplyr::n())
 
 #count number of biological annotations that are identified as animals but have
 #no phylum-level identification
@@ -108,7 +113,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #counts of substrate annotations, and ROV dive information based on dive number
 
 summary_statistics <- list(benthic_start, biological_annotations, percent_flagged, unidentified_animalia, 
-                           interesting_phyla_count, substrate_annotations, 
+                           interesting_phyla_count, Chordata_subset, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
