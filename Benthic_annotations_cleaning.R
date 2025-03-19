@@ -119,6 +119,9 @@ benthic_end <- benthic_end_list |>
 
 benthic_times<-data.frame(dive_number,benthic_start,benthic_end)
 
+#visual check - are all the dives present? Do the start/stop times make sense?
+View(benthic_times)
+
 #-------------------------------------------------------------------------------
 #Joins the clean annotations dataframe to the benthic times dataframe 
 #and then filters the annotations data to only include the benthic portion of
