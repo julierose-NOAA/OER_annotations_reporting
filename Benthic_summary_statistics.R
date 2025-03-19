@@ -94,6 +94,8 @@ bottom_time_hours <- benthic_annotations |>
                                         units = "hours")) |> 
   dplyr::distinct()
 
+bottom_time_hours$bottom_time_hours <- as.numeric(bottom_time_hours$bottom_time_hours)
+
 #If post-2020, extract ROV distance traveled from the dive summary .txt files
 #and combine with ROV bottom time into new ROV_metrics data frame, if pre-2020
 #just rename bottom_time_hours to ROV_metrics
