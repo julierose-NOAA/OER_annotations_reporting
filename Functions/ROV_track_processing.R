@@ -30,8 +30,9 @@ View(ROV_test_half_rows)
 ROV_test_fourth_rows <- ROV_test[seq(1, nrow(ROV_test),4), ]
 View(ROV_test_fourth_rows)
 
-#running average of lat/long
+#running average of lat/long/depth
 ROV_test_SMA <- ROV_test |> 
   dplyr::mutate(Lat_SMA_4 = TTR::SMA(latitude_dd, n = 4),
-                Lon_SMA_4 = TTR::SMA(longitude_dd, n = 4)) 
+                Lon_SMA_4 = TTR::SMA(longitude_dd, n = 4),
+                Depth_SMA_4 = TTR::SMA(depth_m, n = 4)) 
 View(ROV_test_SMA)
