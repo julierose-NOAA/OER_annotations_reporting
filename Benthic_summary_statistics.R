@@ -54,10 +54,15 @@ interesting_phyla_count <- benthic_annotations |>
                    Porifera = sum(phylum == "Porifera", na.rm = TRUE))
                   #Chordata = sum(phylum == "Chordata", na.rm = TRUE))
   
-Chordata_subset <- benthic_annotations |>
+Vertebrata <- benthic_annotations |>
   dplyr::group_by(dive_number) |> 
-  dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |> 
+  dplyr::filter(phylum == "Chordata") |>   
+  dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |>
+  tidyr::drop_na(class) |> 
   dplyr::summarize(Chordata_subset = dplyr::n())
+
+#stop here and confirm that all the remaining chordates are vertebrates
+unique(Chordata_subset$class)
 
 #count number of biological annotations that are identified as animals but have
 #no phylum-level identification
@@ -115,7 +120,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #counts of substrate annotations, and ROV dive information based on dive number
 
 summary_statistics <- list(benthic_start, biological_annotations, percent_flagged, unidentified_animalia, 
-                           interesting_phyla_count, Chordata_subset, substrate_annotations, 
+                           interesting_phyla_count, Vertebrata, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
