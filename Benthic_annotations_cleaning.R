@@ -137,6 +137,10 @@ benthic_annotations<- benthic_join |>
   dplyr::ungroup()
 View(benthic_annotations)
 
+#Abundance was recorded in the comment column in some ASPIRE expeditions.
+#Extracting the comments containing numbers is the first step to extracting
+#this information for those expeditions. This will get moved to a separate
+#script specific to the abundance extraction task.
 benthic_annotations_numeric <- benthic_annotations |> 
   dplyr::filter(grepl("\\d+", comment))
 View(benthic_annotations_numeric)
