@@ -339,15 +339,15 @@ The phylum Echinodermata includes a variety of invertebrates common to the deep 
 ```{r}
 #| echo: false
 
-ggplot(summary_statistics, aes(x = dive_number, y = Chordata)) +
+ggplot(summary_statistics, aes(x = dive_number, y = Chordata_subset)) +
   geom_col(fill = "#34bddf") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 
-chordata_min <- min(summary_statistics$Chordata)
-chordata_max <- max(summary_statistics$Chordata)
-chordata_median <- median(summary_statistics$Chordata)
+chordata_min <- min(summary_statistics$Chordata_subset)
+chordata_max <- max(summary_statistics$Chordata_subset)
+chordata_median <- median(summary_statistics$Chordata_subset)
 ```
 
 ###### [Figure 11]{custom-style="Strong"}. Total Chordata Annotations.
