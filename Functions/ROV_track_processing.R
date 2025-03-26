@@ -37,3 +37,38 @@ ROV_test_SMA <- ROV_test |>
                 Lon_SMA_4 = TTR::SMA(longitude_dd, n = 4),
                 Depth_SMA_4 = TTR::SMA(depth_m, n = 4)) 
 View(ROV_test_SMA)
+
+#-------------------------------------------------------------------------------
+#View tracks - try out leaflet
+library(leaflet)
+
+#pick a center point to set view
+ROV_test_fourth_rows |>  
+  leaflet() |> 
+  addTiles() |>  
+  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1, popup = ~paste0(latitude_dd, "-", longitude_dd))
+
+#compare original and smooths
+ROV_test |>  
+  leaflet() |> 
+  addTiles() |>  
+  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_half_rows |>  
+  leaflet() |> 
+  addTiles() |>  
+  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_fourth_rows |>  
+  leaflet() |> 
+  addTiles() |>  
+  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_SMA |>  
+  leaflet() |> 
+  addTiles() |>  
+  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
