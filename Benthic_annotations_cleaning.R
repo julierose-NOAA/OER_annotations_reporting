@@ -2,22 +2,23 @@
 function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_annotations_reporting/Functions/", 
                              pattern = "[.]R$", full.names = TRUE)
 lapply(function_names, source)
-
+#-------------------------------------------------------------------------------
+#Everything in this section is manually set and is expedition-specific
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX1903L2"
+data_name <- "EX1803"
 
 #create vector of dive numbers for your dataset. The dive landing pages are a 
 #good place to find the dive numbers to start with
 #https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) 
+dive_number<-c(3,4,5,6,7,8,9,10,11,12,13,14,15) 
 
 #create a vector of character descriptors of dives, which will be used to 
 #download the dive summary text files
-dive_names <- c("DIVE01","DIVE02", "DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE07", "DIVE08", "DIVE09", "DIVE10", "DIVE11", "DIVE12", "DIVE13", "DIVE14", "DIVE15", "DIVE16", "DIVE17","DIVE18","DIVE19")
+dive_names <- c("DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE07", "DIVE08", "DIVE09", "DIVE10", "DIVE11", "DIVE12", "DIVE13", "DIVE14", "DIVE15")
 
 #------------------------------------------------------------------------------
 
@@ -138,14 +139,6 @@ benthic_annotations<- benthic_join |>
   dplyr::filter(date_time>=benthic_start & date_time<=benthic_end) |> 
   dplyr::ungroup()
 View(benthic_annotations)
-
-#Abundance was recorded in the comment column in some ASPIRE expeditions.
-#Extracting the comments containing numbers is the first step to extracting
-#this information for those expeditions. This will get moved to a separate
-#script specific to the abundance extraction task.
-benthic_annotations_numeric <- benthic_annotations |> 
-  dplyr::filter(grepl("\\d+", comment))
-View(benthic_annotations_numeric)
 
 dir.create(paste0(wd,"/exports/"))
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
