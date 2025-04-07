@@ -38,6 +38,21 @@ ROV_test_SMA <- ROV_test |>
                 Depth_SMA_4 = TTR::SMA(depth_m, n = 4)) 
 View(ROV_test_SMA)
 
+ROV_test_SMA100 <- ROV_test |> 
+  dplyr::mutate(Lat_SMA_100 = TTR::SMA(latitude_dd, n = 100),
+                Lon_SMA_100 = TTR::SMA(longitude_dd, n = 100),
+                Depth_SMA_100 = TTR::SMA(depth_m, n = 100))
+
+ROV_test_SMA1000 <- ROV_test |> 
+  dplyr::mutate(Lat_SMA_1000 = TTR::SMA(latitude_dd, n = 1000),
+                Lon_SMA_1000 = TTR::SMA(longitude_dd, n = 1000),
+                Depth_SMA_1000 = TTR::SMA(depth_m, n = 1000))
+
+ROV_test_SMA10000 <- ROV_test |> 
+  dplyr::mutate(Lat_SMA_10000 = TTR::SMA(latitude_dd, n = 10000),
+                Lon_SMA_10000 = TTR::SMA(longitude_dd, n = 10000),
+                Depth_SMA_10000 = TTR::SMA(depth_m, n = 10000))
+
 #-------------------------------------------------------------------------------
 #View tracks - try out leaflet
 library(leaflet)
@@ -52,23 +67,58 @@ ROV_test_fourth_rows |>
 ROV_test |>  
   leaflet() |> 
   addTiles() |>  
-  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
   setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
 
 ROV_test_half_rows |>  
   leaflet() |> 
   addTiles() |>  
-  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
   setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
 
 ROV_test_fourth_rows |>  
   leaflet() |> 
   addTiles() |>  
-  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
   setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
 
 ROV_test_SMA |>  
   leaflet() |> 
   addTiles() |>  
-  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1) |> 
+  addPolylines(lng = ~Lon_SMA_4, lat = ~Lat_SMA_4) |> 
   setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_SMA100 |>  
+  leaflet() |> 
+  addTiles() |>  
+  addPolylines(lng = ~Lon_SMA_100, lat = ~Lat_SMA_100) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_SMA1000 |>  
+  leaflet() |> 
+  addTiles() |>  
+  addPolylines(lng = ~Lon_SMA_1000, lat = ~Lat_SMA_1000) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+ROV_test_SMA10000 |>  
+  leaflet() |> 
+  addTiles() |>  
+  addPolylines(lng = ~Lon_SMA_10000, lat = ~Lat_SMA_10000) |> 
+  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+
+#---------------------------------------------------------------------
+#Distance calculations
+library(geosphere)
+
+ROV_test_longlat <- ROV_test |> 
+  dplyr::select(longitude_dd,latitude_dd)
+
+ROV_test_longlat_mat <- as.matrix(ROV_test_longlat)
+ROV_test_haversine <- distHaversine(ROV_test_longlat_mat)
+sum(ROV_test_haversine)
+
+ROV_test_haversine_full <- c(ROV_test_haversine, 0) #to facilitate join
+ROV_test_dist <- ROV_test |> 
+  dplyr::mutate(Haversine = ROV_test_haversine_full)
+
+View(ROV_test_dist)
