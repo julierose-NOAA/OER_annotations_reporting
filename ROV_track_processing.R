@@ -122,3 +122,12 @@ ROV_test_dist <- ROV_test |>
   dplyr::mutate(Haversine = ROV_test_haversine_full)
 
 View(ROV_test_dist)
+
+#calculate 3D distance, speed, and flag outliers
+ROV_test_dist <- ROV_test_dist |> 
+  dplyr::mutate(depth_distance_m = c(diff(altitude_m),0),
+                distance_3D_m = sqrt((depth_distance_m^2) + (Haversine^2)),
+                speed = distance_3D_m/0.2,
+                outlier = speed > 1.5)
+
+ROV_outliers <- sum(ROV_test_dist$outlier, na.rm = TRUE)
