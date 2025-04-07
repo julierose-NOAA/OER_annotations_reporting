@@ -110,18 +110,16 @@ ROV_test_SMA10000 |>
 #Distance calculations
 library(geosphere)
 
-ROV_test_longlat <- ROV_test |> 
-  dplyr::select(longitude_dd,latitude_dd)
+ROV_haversine <- function(data){
+  data_mat <- as.matrix(subset(data, select = c(longitude_dd,latitude_dd)))
+  data_hav <- distHaversine(data_mat)
+  data_full <- c(data_hav, 0) #to facilitate join
+  data_join <- data |> 
+    dplyr::mutate(Haversine = data_full)
+}
 
-ROV_test_longlat_mat <- as.matrix(ROV_test_longlat)
-ROV_test_haversine <- distHaversine(ROV_test_longlat_mat)
-sum(ROV_test_haversine)
-
-ROV_test_haversine_full <- c(ROV_test_haversine, 0) #to facilitate join
-ROV_test_dist <- ROV_test |> 
-  dplyr::mutate(Haversine = ROV_test_haversine_full)
-
-View(ROV_test_dist)
+ROV_test2 <- ROV_haversine(ROV_test)
+View(ROV_test2)
 
 #calculate 3D distance, speed, and flag outliers
 ROV_test_dist <- ROV_test_dist |> 
