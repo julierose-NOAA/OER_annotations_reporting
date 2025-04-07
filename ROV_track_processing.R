@@ -110,8 +110,10 @@ ROV_test_SMA10000 |>
 #Distance calculations
 library(geosphere)
 
-ROV_distance <- function(data){
-  data_mat <- as.matrix(subset(data, select = c(longitude_dd,latitude_dd)))
+ROV_distance <- function(data, lat, long){
+  data_subset <- data |>
+    dplyr::select({{long}},{{lat}})
+  data_mat <- as.matrix(data_subset)
   data_hav <- distHaversine(data_mat)
   data_full <- c(data_hav, 0) #to facilitate join
   data_join <- data |> 
@@ -122,8 +124,16 @@ ROV_distance <- function(data){
                   outlier = speed > 1.5)
 }
 
-ROV_test2 <- ROV_distance(ROV_test)
-View(ROV_test2)
 
 ROV_outliers <- sum(ROV_test_dist$outlier, na.rm = TRUE)
 ROV_distance_traveled <- sum(ROV_test_dist$distance_3D_m, na.rm = TRUE)
+#-------------------------------------------------------------------------------
+#Test function on smoothed data
+ROV_distance_SMA <- ROV_distance(ROV_test_SMA, lat = Lat_SMA_4, long = Lon_SMA_4)
+View(ROV_distance_SMA)
+sum(ROV_distance_SMA$outlier, na.rm = TRUE)
+sum(ROV_distance_SMA$distance_3D_m, na.rm = TRUE)
+
+ROV_distance_SMA1000 <- ROV_distance(ROV_test_SMA1000, lat = Lat_SMA_1000, long = Lon_SMA_1000)
+sum(ROV_distance_SMA1000$outlier, na.rm = TRUE)
+sum(ROV_distance_SMA1000$distance_3D_m, na.rm = TRUE)
