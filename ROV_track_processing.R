@@ -131,3 +131,4 @@ ROV_test_dist <- ROV_test_dist |>
                 outlier = speed > 1.5)
 
 ROV_outliers <- sum(ROV_test_dist$outlier, na.rm = TRUE)
+ROV_distance_traveled <- sum(ROV_test_dist$distance_3D_m, na.rm = TRUE)
