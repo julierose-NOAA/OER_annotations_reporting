@@ -145,7 +145,8 @@ ROV_med_speed <- median(ROV_test_dist$speed, na.rm = TRUE)
 ggplot(ROV_test_dist, aes(x = speed)) +
   geom_histogram(color = "#001743", fill = "#C6E6F0") +
   stat_bin(geom = 'text', aes(label = ..count..), position = position_stack(vjust = 1.1), hjust = 0.2, angle = 30) +
-  labs(x = "Speed (m/s)", y = "Count", title = "2-point ROV speed calculations based on 3D distance traveled") +
+  labs(x = "Speed (m/s)", y = "Count", title = "2-point ROV speed calculations based on 3D distance traveled",
+       subtitle = "Assumes two points are 0.2 seconds apart") +
   geom_vline(xintercept = as.numeric("0.536448"), linetype = "dotted", color = "#FF6C57", linewidth = 1.5) +
   annotate("text", x = 2, y = 29000, label = "Reported cruise speed", color = "#FF6C57") + 
   annotate("text", x = 2, y = 27000, label = "Median speed", color = "#3B469A") +
