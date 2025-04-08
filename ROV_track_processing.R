@@ -129,6 +129,9 @@ ROV_outliers <- sum(ROV_test_dist$outlier, na.rm = TRUE)
 ROV_distance_traveled <- sum(ROV_test_dist$distance_3D_m, na.rm = TRUE)
 #-------------------------------------------------------------------------------
 #Test function on smoothed data
+#
+library(ggplot2)
+
 ROV_distance_SMA <- ROV_distance(ROV_test_SMA, lat = Lat_SMA_4, long = Lon_SMA_4)
 View(ROV_distance_SMA)
 sum(ROV_distance_SMA$outlier, na.rm = TRUE)
@@ -137,3 +140,14 @@ sum(ROV_distance_SMA$distance_3D_m, na.rm = TRUE)
 ROV_distance_SMA1000 <- ROV_distance(ROV_test_SMA1000, lat = Lat_SMA_1000, long = Lon_SMA_1000)
 sum(ROV_distance_SMA1000$outlier, na.rm = TRUE)
 sum(ROV_distance_SMA1000$distance_3D_m, na.rm = TRUE)
+
+ROV_med_speed <- median(ROV_test_dist$speed, na.rm = TRUE)
+ggplot(ROV_test_dist, aes(x = speed)) +
+  geom_histogram(color = "#001743", fill = "#C6E6F0") +
+  stat_bin(geom = 'text', aes(label = ..count..), position = position_stack(vjust = 1.1), hjust = 0.2, angle = 30) +
+  labs(x = "Speed (m/s)", y = "Count", title = "2-point ROV speed calculations based on 3D distance traveled") +
+  geom_vline(xintercept = as.numeric("0.536448"), linetype = "dotted", color = "#FF6C57", linewidth = 1.5) +
+  annotate("text", x = 2, y = 29000, label = "Reported cruise speed", color = "#FF6C57") + 
+  annotate("text", x = 2, y = 27000, label = "Median speed", color = "#3B469A") +
+  geom_vline(xintercept = as.numeric(ROV_med_speed), color = "#3B469A", linewidth = 1.25) +
+  theme_bw()
