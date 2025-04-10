@@ -132,6 +132,7 @@ ROV_distance_traveled <- sum(ROV_test_dist$distance_3D_m, na.rm = TRUE)
 #
 library(ggplot2)
 
+
 ROV_distance_SMA <- ROV_distance(ROV_test_SMA, lat = Lat_SMA_4, long = Lon_SMA_4)
 View(ROV_distance_SMA)
 sum(ROV_distance_SMA$outlier, na.rm = TRUE)
@@ -151,4 +152,26 @@ ggplot(ROV_test_dist, aes(x = speed)) +
   annotate("text", x = 2, y = 29000, label = "Reported cruise speed", color = "#FF6C57") + 
   annotate("text", x = 2, y = 27000, label = "Median speed", color = "#3B469A") +
   geom_vline(xintercept = as.numeric(ROV_med_speed), color = "#3B469A", linewidth = 1.25) +
+  theme_bw()
+
+#-------------------------------------------------------------------------------
+#outlier detection in ROV speed data
+source(file.choose()) #select most recent Wilcox R stats functions from the Center
+#for Open Science https://osf.io/xhe8u/
+#note look into adding single function to this repo
+
+#MAD-median outlier detection method. Selected because it is robust to right skew.
+MadMed_out <- out(ROV_test_dist$speed)
+MadMed_out_df <- as.data.frame(MadMed_out[[3]])
+colnames(MadMed_out_df) = c("speed")
+summary(MadMed_out_df)
+
+#visualize outliers against full dataset - tweak annotation positions with new data
+ggplot(ROV_test_dist, aes(x = speed)) +
+  geom_histogram(color = "#001743", fill = "#C6E6F0") +
+  geom_histogram(data = MadMed_out_df, color = "#3B469A", fill = "#3B469A") +
+  labs(x = "Speed (m/s)", y = "Count", title = "MAD-Median outlier detection in ROV speed data", subtitle = "2-point ROV speed calculations based on 3D distance traveled") +
+  geom_vline(xintercept = as.numeric("0.536448"), linetype = "dotted", color = "#FF6C57", linewidth = 1.5) +
+  annotate("text", x = 1.75, y = 27000, label = "Reported cruise speed (0.54 m/s)", color = "#FF6C57") +
+  annotate("text", x = 2.2, y = 4000, label = "Flagged outliers (>= 1.2 m/s)", color = "#3B469A") +
   theme_bw()
