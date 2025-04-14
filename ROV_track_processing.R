@@ -76,37 +76,32 @@ ROV_benthic <- ROV_join |>
 # View(ROV_test)
 
 #-------------------------------------------------------------------------------
-#smoothing options for lat/long because the high resolution data can be messy
-
-#every other data point
-ROV_test_half_rows <- ROV_test[seq(1, nrow(ROV_test),2), ]
-View(ROV_test_half_rows)
-
-#every fourth data point
-ROV_test_fourth_rows <- ROV_test[seq(1, nrow(ROV_test),4), ]
-View(ROV_test_fourth_rows)
+#smoothing lat/long/depth because the high resolution data can be messy
 
 #running average of lat/long/depth
-ROV_test_SMA <- ROV_test |> 
-  dplyr::mutate(Lat_SMA_4 = TTR::SMA(latitude_dd, n = 4),
-                Lon_SMA_4 = TTR::SMA(longitude_dd, n = 4),
-                Depth_SMA_4 = TTR::SMA(depth_m, n = 4)) 
-View(ROV_test_SMA)
+ROV_SMA <- ROV_benthic |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = 4),
+                Lon_SMA = TTR::SMA(longitude_dd, n = 4),
+                Depth_SMA = TTR::SMA(depth_m, n = 4)) |> 
+  dplyr::ungroup()
 
-ROV_test_SMA100 <- ROV_test |> 
-  dplyr::mutate(Lat_SMA_100 = TTR::SMA(latitude_dd, n = 100),
-                Lon_SMA_100 = TTR::SMA(longitude_dd, n = 100),
-                Depth_SMA_100 = TTR::SMA(depth_m, n = 100))
+str(ROV_SMA)
 
-ROV_test_SMA1000 <- ROV_test |> 
-  dplyr::mutate(Lat_SMA_1000 = TTR::SMA(latitude_dd, n = 1000),
-                Lon_SMA_1000 = TTR::SMA(longitude_dd, n = 1000),
-                Depth_SMA_1000 = TTR::SMA(depth_m, n = 1000))
-
-ROV_test_SMA10000 <- ROV_test |> 
-  dplyr::mutate(Lat_SMA_10000 = TTR::SMA(latitude_dd, n = 10000),
-                Lon_SMA_10000 = TTR::SMA(longitude_dd, n = 10000),
-                Depth_SMA_10000 = TTR::SMA(depth_m, n = 10000))
+# ROV_test_SMA100 <- ROV_test |> 
+#   dplyr::mutate(Lat_SMA_100 = TTR::SMA(latitude_dd, n = 100),
+#                 Lon_SMA_100 = TTR::SMA(longitude_dd, n = 100),
+#                 Depth_SMA_100 = TTR::SMA(depth_m, n = 100))
+# 
+# ROV_test_SMA1000 <- ROV_test |> 
+#   dplyr::mutate(Lat_SMA_1000 = TTR::SMA(latitude_dd, n = 1000),
+#                 Lon_SMA_1000 = TTR::SMA(longitude_dd, n = 1000),
+#                 Depth_SMA_1000 = TTR::SMA(depth_m, n = 1000))
+# 
+# ROV_test_SMA10000 <- ROV_test |> 
+#   dplyr::mutate(Lat_SMA_10000 = TTR::SMA(latitude_dd, n = 10000),
+#                 Lon_SMA_10000 = TTR::SMA(longitude_dd, n = 10000),
+#                 Depth_SMA_10000 = TTR::SMA(depth_m, n = 10000))
 
 #-------------------------------------------------------------------------------
 #View tracks - try out leaflet
