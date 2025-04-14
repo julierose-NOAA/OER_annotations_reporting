@@ -176,3 +176,41 @@ ggplot(ROV_test_dist, aes(x = speed)) +
   annotate("text", x = 1.75, y = 27000, label = "Reported cruise speed (0.54 m/s)", color = "#FF6C57") +
   annotate("text", x = 2.2, y = 4000, label = "Flagged outliers (>= 1.2 m/s)", color = "#3B469A") +
   theme_bw()
+
+#-------------------------------------------------------------------------------
+#Try a range of simple moving average window sizes and look at effects on 
+#number of outliers and calculation of ROV total distance traveled
+
+SMA_window <- seq(from = 1, to = 450, by = 5)
+SMA_out <- c()
+SMA_distance <- c()
+
+for(i in SMA_window){
+  ROV_smooth <- ROV_test |> 
+    dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = i),
+                  Lon_SMA = TTR::SMA(longitude_dd, n = i),
+                  Depth_SMA = TTR::SMA(depth_m, n = i))
+  
+  ROV_distance_smooth <- ROV_distance(ROV_smooth, lat = Lat_SMA, long = Lon_SMA)
+  ROV_out_count <- sum(ROV_distance_smooth$outlier, na.rm = TRUE)
+  SMA_out <- c(SMA_out,ROV_out_count)
+  ROV_dist_m <- sum(ROV_distance_smooth$distance_3D_m, na.rm = TRUE)
+  SMA_distance <- c(SMA_distance, ROV_dist_m)
+}
+
+SMA_df <- cbind(SMA_window, SMA_out, SMA_distance)
+View(SMA_df)
+
+ggplot(SMA_df, aes(x = SMA_window, y = SMA_out)) +
+  geom_point() +
+  labs(x = "Number of ROV position points used in simple moving average smooth", 
+       y = "Number of outliers",
+       title = "Change in number of outliers with increased smoothing") +
+  theme_bw()
+
+ggplot(SMA_df, aes(x = SMA_window, y = SMA_distance)) +
+  geom_point() +
+  labs(x = "Number of ROV position points used in simple moving average smooth", 
+       y = "ROV distance traveled (m)",
+       title = "Change in calculation of ROV distance traveled with increased smoothing") +
+  theme_bw()
