@@ -81,9 +81,9 @@ ROV_benthic <- ROV_join |>
 #running average of lat/long/depth
 ROV_SMA <- ROV_benthic |> 
   dplyr::group_by(dive_number) |> 
-  dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = 4),
-                Lon_SMA = TTR::SMA(longitude_dd, n = 4),
-                Depth_SMA = TTR::SMA(depth_m, n = 4)) |> 
+  dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = 1000),
+                Lon_SMA = TTR::SMA(longitude_dd, n = 1000),
+                Depth_SMA = TTR::SMA(depth_m, n = 1000)) |> 
   dplyr::ungroup()
 
 str(ROV_SMA)
@@ -104,57 +104,28 @@ str(ROV_SMA)
 #                 Depth_SMA_10000 = TTR::SMA(depth_m, n = 10000))
 
 #-------------------------------------------------------------------------------
-#View tracks - try out leaflet
+#View tracks in leaflet
 library(leaflet)
 
-#pick a center point to set view
-ROV_test_fourth_rows |>  
+#if you want to pick a center point to set view
+ROV_SMA |>
+  dplyr::filter(dive_number == 1) |> 
   leaflet() |> 
   addTiles() |>  
-  addCircleMarkers(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1, popup = ~paste0(latitude_dd, "-", longitude_dd))
+  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd, radius = 1, popup = ~paste0(latitude_dd, "-", longitude_dd))
 
-#compare original and smooths
-ROV_test |>  
+#visually compare original and smooths
+ROV_SMA |>
+  dplyr::filter(dive_number == 1)
   leaflet() |> 
   addTiles() |>  
-  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd, group = ~dive_number)
 
-ROV_test_half_rows |>  
+ROV_SMA |> 
+  dplyr::filter(dive_number == 1) |>
   leaflet() |> 
   addTiles() |>  
-  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
-
-ROV_test_fourth_rows |>  
-  leaflet() |> 
-  addTiles() |>  
-  addPolylines(lng = ~longitude_dd, lat = ~latitude_dd) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
-
-ROV_test_SMA |>  
-  leaflet() |> 
-  addTiles() |>  
-  addPolylines(lng = ~Lon_SMA_4, lat = ~Lat_SMA_4) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
-
-ROV_test_SMA100 |>  
-  leaflet() |> 
-  addTiles() |>  
-  addPolylines(lng = ~Lon_SMA_100, lat = ~Lat_SMA_100) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
-
-ROV_test_SMA1000 |>  
-  leaflet() |> 
-  addTiles() |>  
-  addPolylines(lng = ~Lon_SMA_1000, lat = ~Lat_SMA_1000) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
-
-ROV_test_SMA10000 |>  
-  leaflet() |> 
-  addTiles() |>  
-  addPolylines(lng = ~Lon_SMA_10000, lat = ~Lat_SMA_10000) |> 
-  setView(lng = -91.6823141862185, lat = 27.0086355473185, zoom = 20)
+  addPolylines(lng = ~Lon_SMA, lat = ~Lat_SMA)
 
 #---------------------------------------------------------------------
 #Distance calculations
