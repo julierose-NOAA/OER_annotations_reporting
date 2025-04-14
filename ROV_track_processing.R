@@ -131,37 +131,35 @@ ROV_SMA |>
 #Distance calculations
 library(geosphere)
 
+#-------------------------------------------------------------------------------
+#NEW FUNCTION
+#move to functions folder and add source() when this work is finished
 ROV_distance <- function(data, lat, long){
-  data_subset <- data |>
-    dplyr::select({{long}},{{lat}})
-  data_mat <- as.matrix(data_subset)
-  data_hav <- distHaversine(data_mat)
-  data_full <- c(data_hav, 0) #to facilitate join
-  data_join <- data |> 
-    dplyr::mutate(Haversine = data_full,
+  data |> 
+    dplyr::mutate(Haversine = c(distHaversine(cbind({{long}},{{lat}})),0),
                   depth_distance_m = c(diff(altitude_m),0),
                   distance_3D_m = sqrt((depth_distance_m^2) + (Haversine^2)),
-                  speed = distance_3D_m/0.2,
-                  outlier = speed > min_outlier)
+                  speed = distance_3D_m/0.2)
+                  #outlier = speed > min_outlier)
+  
 }
 
 
-ROV_outliers <- sum(ROV_test_dist$outlier, na.rm = TRUE)
-ROV_distance_traveled <- sum(ROV_test_dist$distance_3D_m, na.rm = TRUE)
 #-------------------------------------------------------------------------------
 #Test function on smoothed data
 #
 library(ggplot2)
 
+ROV_SMA_test <- ROV_SMA |> 
+  dplyr::group_by(dive_number) |> 
+  ROV_distance(lat = Lat_SMA, long = Lon_SMA) |>
+  dplyr::ungroup()
 
-ROV_distance_SMA <- ROV_distance(ROV_test_SMA, lat = Lat_SMA_4, long = Lon_SMA_4)
-View(ROV_distance_SMA)
-sum(ROV_distance_SMA$outlier, na.rm = TRUE)
-sum(ROV_distance_SMA$distance_3D_m, na.rm = TRUE)
-
-ROV_distance_SMA1000 <- ROV_distance(ROV_test_SMA1000, lat = Lat_SMA_1000, long = Lon_SMA_1000)
-sum(ROV_distance_SMA1000$outlier, na.rm = TRUE)
-sum(ROV_distance_SMA1000$distance_3D_m, na.rm = TRUE)
+ROV_SMA_test |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::summarise(dist = sum(distance_3D_m, na.rm = TRUE))
+  
+#stopped here
 
 ROV_med_speed <- median(ROV_test_dist$speed, na.rm = TRUE)
 ggplot(ROV_test_dist, aes(x = speed)) +
