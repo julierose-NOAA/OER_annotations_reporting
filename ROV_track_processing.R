@@ -121,7 +121,7 @@ ROV_distance <- function(data, lat, long){
                   depth_distance_m = c(diff(altitude_m),0),
                   distance_3D_m = sqrt((depth_distance_m^2) + (Haversine^2)),
                   speed = distance_3D_m/0.2,
-                  outlier = speed > 1.5)
+                  outlier = speed > min_outlier)
 }
 
 
@@ -165,6 +165,7 @@ MadMed_out <- out(ROV_test_dist$speed)
 MadMed_out_df <- as.data.frame(MadMed_out[[3]])
 colnames(MadMed_out_df) = c("speed")
 summary(MadMed_out_df)
+min_outlier <- min(MadMed_out_df$speed)
 
 #visualize outliers against full dataset - tweak annotation positions with new data
 ggplot(ROV_test_dist, aes(x = speed)) +
