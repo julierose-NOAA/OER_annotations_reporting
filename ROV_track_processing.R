@@ -134,6 +134,8 @@ library(geosphere)
 #-------------------------------------------------------------------------------
 #NEW FUNCTION
 #move to functions folder and add source() when this work is finished
+#use cbind instead of select because distHaversine requires a matrix input
+#the zero at the end of the column ensures the correct number of rows
 ROV_distance <- function(data, lat, long){
   data |> 
     dplyr::mutate(Haversine = c(distHaversine(cbind({{long}},{{lat}})),0),
@@ -143,7 +145,6 @@ ROV_distance <- function(data, lat, long){
                   #outlier = speed > min_outlier)
   
 }
-
 
 #-------------------------------------------------------------------------------
 #Test function on smoothed data
