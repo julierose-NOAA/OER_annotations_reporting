@@ -88,21 +88,6 @@ ROV_SMA <- ROV_benthic |>
 
 str(ROV_SMA)
 
-# ROV_test_SMA100 <- ROV_test |> 
-#   dplyr::mutate(Lat_SMA_100 = TTR::SMA(latitude_dd, n = 100),
-#                 Lon_SMA_100 = TTR::SMA(longitude_dd, n = 100),
-#                 Depth_SMA_100 = TTR::SMA(depth_m, n = 100))
-# 
-# ROV_test_SMA1000 <- ROV_test |> 
-#   dplyr::mutate(Lat_SMA_1000 = TTR::SMA(latitude_dd, n = 1000),
-#                 Lon_SMA_1000 = TTR::SMA(longitude_dd, n = 1000),
-#                 Depth_SMA_1000 = TTR::SMA(depth_m, n = 1000))
-# 
-# ROV_test_SMA10000 <- ROV_test |> 
-#   dplyr::mutate(Lat_SMA_10000 = TTR::SMA(latitude_dd, n = 10000),
-#                 Lon_SMA_10000 = TTR::SMA(longitude_dd, n = 10000),
-#                 Depth_SMA_10000 = TTR::SMA(depth_m, n = 10000))
-
 #-------------------------------------------------------------------------------
 #View tracks in leaflet
 library(leaflet)
@@ -158,79 +143,6 @@ ROV_SMA_test <- ROV_SMA |>
 
 ROV_SMA_test |> 
   dplyr::group_by(dive_number) |> 
-  dplyr::summarise(dist = sum(distance_3D_m, na.rm = TRUE))
+  dplyr::summarise(dist = sum(distance_3D_m, na.rm = TRUE),
+                   med_speed = median(speed, na.rm = TRUE))
   
-#stopped here
-
-ROV_med_speed <- median(ROV_test_dist$speed, na.rm = TRUE)
-ggplot(ROV_test_dist, aes(x = speed)) +
-  geom_histogram(color = "#001743", fill = "#C6E6F0") +
-  stat_bin(geom = 'text', aes(label = ..count..), position = position_stack(vjust = 1.1), hjust = 0.2, angle = 30) +
-  labs(x = "Speed (m/s)", y = "Count", title = "2-point ROV speed calculations based on 3D distance traveled",
-       subtitle = "Assumes two points are 0.2 seconds apart") +
-  geom_vline(xintercept = as.numeric("0.536448"), linetype = "dotted", color = "#FF6C57", linewidth = 1.5) +
-  annotate("text", x = 2, y = 29000, label = "Reported cruise speed", color = "#FF6C57") + 
-  annotate("text", x = 2, y = 27000, label = "Median speed", color = "#3B469A") +
-  geom_vline(xintercept = as.numeric(ROV_med_speed), color = "#3B469A", linewidth = 1.25) +
-  theme_bw()
-
-#-------------------------------------------------------------------------------
-#outlier detection in ROV speed data
-source(file.choose()) #select most recent Wilcox R stats functions from the Center
-#for Open Science https://osf.io/xhe8u/
-#note look into adding single function to this repo
-
-#MAD-median outlier detection method. Selected because it is robust to right skew.
-MadMed_out <- out(ROV_test_dist$speed)
-MadMed_out_df <- as.data.frame(MadMed_out[[3]])
-colnames(MadMed_out_df) = c("speed")
-summary(MadMed_out_df)
-min_outlier <- min(MadMed_out_df$speed)
-
-#visualize outliers against full dataset - tweak annotation positions with new data
-ggplot(ROV_test_dist, aes(x = speed)) +
-  geom_histogram(color = "#001743", fill = "#C6E6F0") +
-  geom_histogram(data = MadMed_out_df, color = "#3B469A", fill = "#3B469A") +
-  labs(x = "Speed (m/s)", y = "Count", title = "MAD-Median outlier detection in ROV speed data", subtitle = "2-point ROV speed calculations based on 3D distance traveled") +
-  geom_vline(xintercept = as.numeric("0.536448"), linetype = "dotted", color = "#FF6C57", linewidth = 1.5) +
-  annotate("text", x = 1.75, y = 27000, label = "Reported cruise speed (0.54 m/s)", color = "#FF6C57") +
-  annotate("text", x = 2.2, y = 4000, label = "Flagged outliers (>= 1.2 m/s)", color = "#3B469A") +
-  theme_bw()
-
-#-------------------------------------------------------------------------------
-#Try a range of simple moving average window sizes and look at effects on 
-#number of outliers and calculation of ROV total distance traveled
-
-SMA_window <- seq(from = 1, to = 450, by = 5)
-SMA_out <- c()
-SMA_distance <- c()
-
-for(i in SMA_window){
-  ROV_smooth <- ROV_test |> 
-    dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = i),
-                  Lon_SMA = TTR::SMA(longitude_dd, n = i),
-                  Depth_SMA = TTR::SMA(depth_m, n = i))
-  
-  ROV_distance_smooth <- ROV_distance(ROV_smooth, lat = Lat_SMA, long = Lon_SMA)
-  ROV_out_count <- sum(ROV_distance_smooth$outlier, na.rm = TRUE)
-  SMA_out <- c(SMA_out,ROV_out_count)
-  ROV_dist_m <- sum(ROV_distance_smooth$distance_3D_m, na.rm = TRUE)
-  SMA_distance <- c(SMA_distance, ROV_dist_m)
-}
-
-SMA_df <- cbind(SMA_window, SMA_out, SMA_distance)
-View(SMA_df)
-
-ggplot(SMA_df, aes(x = SMA_window, y = SMA_out)) +
-  geom_point() +
-  labs(x = "Number of ROV position points used in simple moving average smooth", 
-       y = "Number of outliers",
-       title = "Change in number of outliers with increased smoothing") +
-  theme_bw()
-
-ggplot(SMA_df, aes(x = SMA_window, y = SMA_distance)) +
-  geom_point() +
-  labs(x = "Number of ROV position points used in simple moving average smooth", 
-       y = "ROV distance traveled (m)",
-       title = "Change in calculation of ROV distance traveled with increased smoothing") +
-  theme_bw()
