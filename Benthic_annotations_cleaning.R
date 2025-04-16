@@ -4,16 +4,30 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_an
                              pattern = "[.]R$", full.names = TRUE)
 lapply(function_names, source)
 #-------------------------------------------------------------------------------
-#Everything in this section is manually set and is expedition-specific
+#List of packages that need to be installed in order to run this code:
+#if(!require('purrr'))install.packages('purrr')
+#if(!require('dplyr'))install.packages('dplyr')
+#if(!require('tidyr'))install.packages('tidyr')
+#if(!require('stringr'))install.packages('stringr')
+#add other packages here
+
+#-------------------------------------------------------------------------------
+#Everything in this section is manually set and is expedition-specific. This
+#code only works on a single expedition at one time - you cannot combine
+#expeditions to analyze at once
 
 #This code has been tested on ASPIRE expeditions, including: EX1711 EX1803, 
 #EX1811,#EX1903L2,EX1905L2,EX1907,EX2103,EX2104,EX2107,EX2201,EX2205,EX2206
 
+#This code is set up with a file structure that is specific to an expedition,
+#with a single folder inside that expedition labeled 'annotations' and inside
+#that folder is the downloaded annotations .csv file
 #set working directory
 wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
 setwd(wd)
 
-#set standard name to refer to your data
+#set standard name to refer to your data, using the naming convention
+#"EX","expedition number", e.g.:
 data_name <- "EX2104"
 
 #create vector of dive numbers for your dataset. The dive landing pages are a 
@@ -28,7 +42,8 @@ dive_names <- c("DIVE01", "DIVE02","DIVE03", "DIVE04", "DIVE05", "DIVE06", "DIVE
 #------------------------------------------------------------------------------
 
 #Read in SeaTube .csv annotation file(s) and apply clean_annotation function.
-#This can accommodate a single .csv containing all dives or a group of annotation 
+#Annotations can be downloaded from https://data.oceannetworks.ca/SeaTubeSearch.
+#This code can accommodate a single .csv containing all dives or a group of annotation 
 #files saved locally as .csv exports from SeaTube. Uses the number of files
 #in the annotation folder to determine which import process to execute.
 #If only one file is present in the folder, this code assumes that the file
