@@ -52,7 +52,7 @@ interesting_phyla_count <- benthic_annotations |>
   dplyr::summarize(Cnidaria = sum(phylum == "Cnidaria", na.rm = TRUE),
                    Echinodermata = sum(phylum == "Echinodermata", na.rm = TRUE),
                    Porifera = sum(phylum == "Porifera", na.rm = TRUE))
-                  #Chordata = sum(phylum == "Chordata", na.rm = TRUE))
+                  
   
 Vertebrata <- benthic_annotations |>
   dplyr::group_by(dive_number) |> 
