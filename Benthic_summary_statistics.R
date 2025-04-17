@@ -59,10 +59,7 @@ Vertebrata <- benthic_annotations |>
   dplyr::filter(phylum == "Chordata") |>   
   dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |>
   tidyr::drop_na(class) |> 
-  dplyr::summarize(Chordata_subset = dplyr::n())
-
-#stop here and confirm that all the remaining chordates are vertebrates
-unique(Chordata_subset$class)
+  dplyr::summarize(Vertebrata = dplyr::n())
 
 #count number of biological annotations that are identified as animals but have
 #no phylum-level identification
