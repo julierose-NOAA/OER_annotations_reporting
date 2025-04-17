@@ -339,17 +339,17 @@ The phylum Echinodermata includes a variety of invertebrates common to the deep 
 ```{r}
 #| echo: false
 
-ggplot(summary_statistics, aes(x = dive_number, y = Chordata_subset)) +
+ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
   geom_col(fill = "#34bddf") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 
-chordata_min <- min(summary_statistics$Chordata_subset)
-chordata_max <- max(summary_statistics$Chordata_subset)
-chordata_median <- median(summary_statistics$Chordata_subset)
+vertebrata_min <- min(summary_statistics$Vertebrata)
+vertebrata_max <- max(summary_statistics$Vertebrata)
+vertebrata_median <- median(summary_statistics$Vertebrata)
 ```
 
-###### [Figure 11]{custom-style="Strong"}. Total Chordata Annotations.
+###### [Figure 11]{custom-style="Strong"}. Total Vertebrata Annotations.
 
-The phylum Chordata contains all tunicates (Subphylum: Tunicata) and vertebrates (Subphylum: Vertebrata). Commonly observed chordates include larvaceans and fishes. The total number of chordates observed across dives within `r expedition_name` ranged from `r chordata_min` to `r chordata_max`, with a median of `r chordata_median`.
+The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include larvaceans and fishes. The total number of vertebrates observed across dives within `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max`, with a median of `r vertebrata_median`.
