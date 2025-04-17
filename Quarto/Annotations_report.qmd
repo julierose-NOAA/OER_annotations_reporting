@@ -352,4 +352,4 @@ vertebrata_median <- median(summary_statistics$Vertebrata)
 
 ###### [Figure 11]{custom-style="Strong"}. Total Vertebrata Annotations.
 
-The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include larvaceans and fishes. The total number of vertebrates observed across dives within `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max`, with a median of `r vertebrata_median`.
+The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates observed across dives within `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max`, with a median of `r vertebrata_median`.
