@@ -1,16 +1,18 @@
-#source functions
-#set file path for the functions folder within this repository
-function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_annotations_reporting/Functions/", 
-                             pattern = "[.]R$", full.names = TRUE)
-lapply(function_names, source)
-#-------------------------------------------------------------------------------
-#List of packages that need to be installed in order to run this code:
+#Tests for package availability and installs missing packages that are needed
+#in order to run this code:
 if(!require('purrr'))install.packages('purrr')
 if(!require('dplyr'))install.packages('dplyr')
 if(!require('tidyr'))install.packages('tidyr')
 if(!require('stringr'))install.packages('stringr')
 
 #-------------------------------------------------------------------------------
+#source functions
+#need to manually set the file path for the functions folder within your local repository
+function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_annotations_reporting/Functions/", 
+                             pattern = "[.]R$", full.names = TRUE)
+lapply(function_names, source)
+#-------------------------------------------------------------------------------
+
 #Everything in this section is manually set and is expedition-specific. This
 #code only works on a single expedition at one time - you cannot combine
 #expeditions to analyze at once
