@@ -5,11 +5,10 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_an
 lapply(function_names, source)
 #-------------------------------------------------------------------------------
 #List of packages that need to be installed in order to run this code:
-#if(!require('purrr'))install.packages('purrr')
-#if(!require('dplyr'))install.packages('dplyr')
-#if(!require('tidyr'))install.packages('tidyr')
-#if(!require('stringr'))install.packages('stringr')
-#add other packages here
+if(!require('purrr'))install.packages('purrr')
+if(!require('dplyr'))install.packages('dplyr')
+if(!require('tidyr'))install.packages('tidyr')
+if(!require('stringr'))install.packages('stringr')
 
 #-------------------------------------------------------------------------------
 #Everything in this section is manually set and is expedition-specific. This
