@@ -1,4 +1,12 @@
+#Tests for package availability and installs missing packages that are needed
+#in order to run this code:
+if(!require('purrr'))install.packages('purrr')
+if(!require('dplyr'))install.packages('dplyr')
+if(!require('tidyr'))install.packages('tidyr')
+if(!require('readr'))install.packages('readr')
+#-------------------------------------------------------------------------------
 #source functions
+#need to manually set the file path for the functions folder within your local repository
 function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_biodiversity/Functions/", 
                              pattern = "[.]R$", full.names = TRUE)
 lapply(function_names, source)
