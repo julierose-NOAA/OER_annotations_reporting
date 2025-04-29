@@ -144,6 +144,8 @@ OER_theme <- theme_bw() + theme(plot.title = element_text(family = "Roboto", col
         axis.text = element_text(family = "Roboto", size = 10))
 ```
 
+# 1. Dive summary metrics
+
 ```{r}
 #| echo: false
 #| label: ROV-time-on-bottom
@@ -178,6 +180,12 @@ ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours duri
 #distance_median <- median(summary_statistics$distance_traveled_m)
 #}
 ```
+
+Add figure here for mean ROV depth while on bottom
+
+###### [Figure 2]{custom-style="Strong"}. Mean ROV depth in meters.
+
+The shallowest dive during `r expedition_name` had a mean depth of \[add link\], and the deepest dive had a mean depth of \[add link\]. Overall, dives within `r expedition_name` averaged \[add link\] meters in depth.
 
 ```{r}
 #| echo: false
