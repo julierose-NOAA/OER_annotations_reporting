@@ -349,10 +349,14 @@ The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Co
 ```{r}
 #| echo: false
 
+percent_flagged_rounded <- round(summary_statistics$percent_flagged,1)
+
 ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
   geom_col(fill = "#34bddf") +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
+  ylim(0,100) +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  geom_text(aes(label = percent_flagged_rounded), vjust = 0, family = "Roboto", color = "#003087") + 
   OER_theme
 ```
 
