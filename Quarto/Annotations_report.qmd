@@ -31,7 +31,22 @@ summary_statistics <- read_csv(paste0("summary_statistics_",expedition_name,".cs
 #load phylum frequency percent
 phyla_frequency_percent_all <- read_csv(paste0("phyla_frequency_percent_all_",expedition_name,".csv"),col_names = TRUE)
 
-#perform summary statistics calculations for each data type
+#calculate percentage of unidentified annotations at each taxonomic level
+annotations_taxonomy_percentage <- summary_statistics |> 
+  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
+  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent") |> 
+  pivot_longer(class:species) |> 
+  rename(taxonomic_level = name,
+         annotation_percentage = value) |> 
+  mutate(taxonomic_level = as.factor(taxonomic_level),
+         dive_number = as.factor(dive_number)) |> 
+  mutate(taxonomic_level = fct_relevel(taxonomic_level,
+                                       c("class","order",
+                                         "family","genus","species")))
+annotations_taxonomy_percentage[is.na(annotations_taxonomy_percentage)] = 0
+
+#perform min/max/median calculations across dives for each data type
+
 #ROV bottom time
 bottom_min <- round(min(summary_statistics$bottom_time_hours),2)
 bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
@@ -76,6 +91,33 @@ echinodermata_median <- median(summary_statistics$Echinodermata)
 vertebrata_min <- min(summary_statistics$Vertebrata)
 vertebrata_max <- max(summary_statistics$Vertebrata)
 vertebrata_median <- median(summary_statistics$Vertebrata)
+
+#calculate min/max/median for percent unidentified at each taxonomic level
+annotations_taxonomy_percentage_wide <- summary_statistics |> 
+  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
+  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent")
+
+annotations_taxonomy_percentage_wide[is.na(annotations_taxonomy_percentage_wide)] = 0
+
+class_min <- round(min(annotations_taxonomy_percentage_wide$class),0)
+class_max <- round(max(annotations_taxonomy_percentage_wide$class),0)
+class_median <- round(median(annotations_taxonomy_percentage_wide$class),0)
+
+order_min <- round(min(annotations_taxonomy_percentage_wide$order),0)
+order_max <- round(max(annotations_taxonomy_percentage_wide$order),0)
+order_median <- round(median(annotations_taxonomy_percentage_wide$order),0)
+
+family_min <- round(min(annotations_taxonomy_percentage_wide$family),0)
+family_max <- round(max(annotations_taxonomy_percentage_wide$family),0)
+family_median <- round(median(annotations_taxonomy_percentage_wide$family),0)
+
+genus_min <- round(min(annotations_taxonomy_percentage_wide$genus),0)
+genus_max <- round(max(annotations_taxonomy_percentage_wide$genus),0)
+genus_median <- round(median(annotations_taxonomy_percentage_wide$genus),0)
+
+species_min <- round(min(annotations_taxonomy_percentage_wide$species),0)
+species_max <- round(max(annotations_taxonomy_percentage_wide$species),0)
+species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 ```
 
 # Overview
@@ -224,18 +266,7 @@ The number of benthic biological annotations that were unable to be identified t
 ```{r}
 #| echo: false
 
-annotations_taxonomy_percentage <- summary_statistics |> 
-  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
-  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent") |> 
-  pivot_longer(class:species) |> 
-  rename(taxonomic_level = name,
-         annotation_percentage = value) |> 
-  mutate(taxonomic_level = as.factor(taxonomic_level),
-         dive_number = as.factor(dive_number)) |> 
-  mutate(taxonomic_level = fct_relevel(taxonomic_level,
-                                       c("class","order",
-                                         "family","genus","species")))
-annotations_taxonomy_percentage[is.na(annotations_taxonomy_percentage)] = 0
+
 
 ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
                                  y = annotation_percentage,
@@ -254,32 +285,6 @@ ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
         plot.margin = margin(0.5,0.5,0.5,1.5, "cm"))
-
-annotations_taxonomy_percentage_wide <- summary_statistics |> 
-  mutate(across(class:species, \(x) x/phylum*100, .names = "{.col}_percent")) |> 
-  select("dive_number", class = "class_percent", order = "order_percent", family = "family_percent", genus = "genus_percent", species = "species_percent")
-
-annotations_taxonomy_percentage_wide[is.na(annotations_taxonomy_percentage_wide)] = 0
-
-class_min <- round(min(annotations_taxonomy_percentage_wide$class),0)
-class_max <- round(max(annotations_taxonomy_percentage_wide$class),0)
-class_median <- round(median(annotations_taxonomy_percentage_wide$class),0)
-
-order_min <- round(min(annotations_taxonomy_percentage_wide$order),0)
-order_max <- round(max(annotations_taxonomy_percentage_wide$order),0)
-order_median <- round(median(annotations_taxonomy_percentage_wide$order),0)
-
-family_min <- round(min(annotations_taxonomy_percentage_wide$family),0)
-family_max <- round(max(annotations_taxonomy_percentage_wide$family),0)
-family_median <- round(median(annotations_taxonomy_percentage_wide$family),0)
-
-genus_min <- round(min(annotations_taxonomy_percentage_wide$genus),0)
-genus_max <- round(max(annotations_taxonomy_percentage_wide$genus),0)
-genus_median <- round(median(annotations_taxonomy_percentage_wide$genus),0)
-
-species_min <- round(min(annotations_taxonomy_percentage_wide$species),0)
-species_max <- round(max(annotations_taxonomy_percentage_wide$species),0)
-species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 ```
 
 ###### [Figure 6]{custom-style="Strong"}. Percentage of annotations identified to each taxonomic level
