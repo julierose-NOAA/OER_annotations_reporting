@@ -30,6 +30,52 @@ annotations_date <- "10-21-2024"
 summary_statistics <- read_csv(paste0("summary_statistics_",expedition_name,".csv"),col_names = TRUE, show_col_types = FALSE)
 #load phylum frequency percent
 phyla_frequency_percent_all <- read_csv(paste0("phyla_frequency_percent_all_",expedition_name,".csv"),col_names = TRUE)
+
+#perform summary statistics calculations for each data type
+#ROV bottom time
+bottom_min <- round(min(summary_statistics$bottom_time_hours),2)
+bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
+bottom_median <- round(median(summary_statistics$bottom_time_hours),2)
+
+#number of geoform/substrate annotations
+geo_sub_annotations_min <- min(summary_statistics$geoform_or_substrate)
+geo_sub_annotations_max <- max(summary_statistics$geoform_or_substrate)
+geo_sub_annotations_median <- median(summary_statistics$geoform_or_substrate)
+
+#number of biological annotations
+bio_annotations_min <- min(summary_statistics$phylum)
+bio_annotations_max <- max(summary_statistics$phylum)
+bio_annotations_median <- median(summary_statistics$phylum)
+
+#percentage annotations flagged for review
+percent_flagged_min <- round(min(summary_statistics$percent_flagged),1)
+percent_flagged_max <- round(max(summary_statistics$percent_flagged),1)
+percent_flagged_median <- round(median(summary_statistics$percent_flagged),1)
+
+#number of unidentified biological annotations
+unID_bio_min <- min(summary_statistics$Unidentified_Biota)
+unID_bio_max <- max(summary_statistics$Unidentified_Biota)
+unID_bio_median <- median(summary_statistics$Unidentified_Biota)
+
+#number of Cnidaria annotations
+cnidaria_min <- min(summary_statistics$Cnidaria)
+cnidaria_max <- max(summary_statistics$Cnidaria)
+cnidaria_median <- median(summary_statistics$Cnidaria)
+
+#number of Porifera annotations
+porifera_min <- min(summary_statistics$Porifera)
+porifera_max <- max(summary_statistics$Porifera)
+porifera_median <- median(summary_statistics$Porifera)
+
+#number of Echinodermata annotations
+echinodermata_min <- min(summary_statistics$Echinodermata)
+echinodermata_max <- max(summary_statistics$Echinodermata)
+echinodermata_median <- median(summary_statistics$Echinodermata)
+
+#number of Vertebrata annotations
+vertebrata_min <- min(summary_statistics$Vertebrata)
+vertebrata_max <- max(summary_statistics$Vertebrata)
+vertebrata_median <- median(summary_statistics$Vertebrata)
 ```
 
 # Overview
@@ -64,10 +110,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
   labs(x = "Dive Number", y = "Hours") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-bottom_min <- round(min(summary_statistics$bottom_time_hours),2)
-bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
-bottom_median <- round(median(summary_statistics$bottom_time_hours),2)
 ```
 
 ###### [Figure 1]{custom-style="Strong"}. ROV time on bottom in hours.
@@ -102,10 +144,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-geo_sub_annotations_min <- min(summary_statistics$geoform_or_substrate)
-geo_sub_annotations_max <- max(summary_statistics$geoform_or_substrate)
-geo_sub_annotations_median <- median(summary_statistics$geoform_or_substrate)
 ```
 
 ###### [Figure 2]{custom-style="Strong"}. Total geoform or substrate annotations.
@@ -120,10 +158,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = phylum)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-bio_annotations_min <- min(summary_statistics$phylum)
-bio_annotations_max <- max(summary_statistics$phylum)
-bio_annotations_median <- median(summary_statistics$phylum)
 ```
 
 ###### [Figure 3]{custom-style="Strong"}. Total biological annotations.
@@ -138,10 +172,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-percent_flagged_min <- round(min(summary_statistics$percent_flagged),1)
-percent_flagged_max <- round(max(summary_statistics$percent_flagged),1)
-percent_flagged_median <- round(median(summary_statistics$percent_flagged),1)
 ```
 
 ###### [Figure 4]{custom-style="Strong"}. Percentage of annotations flagged for review.
@@ -156,10 +186,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-unID_bio_min <- min(summary_statistics$Unidentified_Biota)
-unID_bio_max <- max(summary_statistics$Unidentified_Biota)
-unID_bio_median <- median(summary_statistics$Unidentified_Biota)
 ```
 
 ###### [Figure 5]{custom-style="Strong"}. Number of unidentified biological annotations.
@@ -290,10 +316,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = Cnidaria)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-cnidaria_min <- min(summary_statistics$Cnidaria)
-cnidaria_max <- max(summary_statistics$Cnidaria)
-cnidaria_median <- median(summary_statistics$Cnidaria)
 ```
 
 ###### [Figure 8]{custom-style="Strong"}. Total Cnidaria annotations.
@@ -308,10 +330,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-porifera_min <- min(summary_statistics$Porifera)
-porifera_max <- max(summary_statistics$Porifera)
-porifera_median <- median(summary_statistics$Porifera)
 ```
 
 ###### [Figure 9]{custom-style="Strong"}. Total Porifera annotations.
@@ -326,10 +344,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-echinodermata_min <- min(summary_statistics$Echinodermata)
-echinodermata_max <- max(summary_statistics$Echinodermata)
-echinodermata_median <- median(summary_statistics$Echinodermata)
 ```
 
 ###### [Figure 10]{custom-style="Strong"}. Total Echinodermata Annotations.
@@ -344,10 +358,6 @@ ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
-
-vertebrata_min <- min(summary_statistics$Vertebrata)
-vertebrata_max <- max(summary_statistics$Vertebrata)
-vertebrata_median <- median(summary_statistics$Vertebrata)
 ```
 
 ###### [Figure 11]{custom-style="Strong"}. Total Vertebrata Annotations.
