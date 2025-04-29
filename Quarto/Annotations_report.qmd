@@ -196,7 +196,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
 
 ###### [Figure 3]{custom-style="Strong"}. Total geoform or substrate annotations.
 
-The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with `r geo_sub_annotations_median` being the median number of geoform and substrate annotations .
+The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with a median of `r geo_sub_annotations_median` annotations .
 
 ```{r}
 #| echo: false
