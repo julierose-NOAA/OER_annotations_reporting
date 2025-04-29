@@ -138,6 +138,7 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 ```{r}
 #| echo: false
 
+#create OER figure theme to apply throughout the report
 OER_theme <- theme_bw() + theme(plot.title = element_text(family = "Roboto", color = "#003087", size = 16),
         axis.title = element_text(family = "Roboto", color = "#003087", size = 12),
         axis.text = element_text(family = "Roboto", size = 10))
@@ -265,9 +266,6 @@ The number of benthic biological annotations that were unable to be identified t
 
 ```{r}
 #| echo: false
-
-
-
 ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
                                  y = annotation_percentage,
                                  group = dive_number,
