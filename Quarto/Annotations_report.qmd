@@ -14,6 +14,7 @@ editor: visual
 expedition_name <- "EX2107"
 expedition_title <- "Windows to the Deep 2021: Blake Plateau"
 annotations_date <- "10-21-2024"
+UCH_dives <- 0
 
 #libraries
 library(readr)
@@ -36,6 +37,10 @@ OER_theme <- theme_bw() + theme(plot.title = element_text(family = "Roboto", col
 summary_statistics <- read_csv(paste0("summary_statistics_",expedition_name,".csv"),col_names = TRUE, show_col_types = FALSE)
 #load phylum frequency percent
 phyla_frequency_percent_all <- read_csv(paste0("phyla_frequency_percent_all_",expedition_name,".csv"),col_names = TRUE)
+
+#calculate total dive number
+dive_count <- nrow(summary_statistics)
+science_dive_count <- dive_count - UCH_dives
 
 #calculate percentage of unidentified annotations at each taxonomic level
 annotations_taxonomy_percentage <- summary_statistics |> 
@@ -126,18 +131,21 @@ species_max <- round(max(annotations_taxonomy_percentage_wide$species),0)
 species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 ```
 
-# Overview
+# Data Summary
 
-This report is a draft expedition-level summary of expert annotations of benthic deep-sea communities for groups of ROV dives. It provides tables and graphs of total numbers of benthic biological and geoform/substrate annotations, benthic biological annotations by taxonomic level, and ROV time on bottom.
+This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). These data have been QAQC\'d by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the benthic portion of the dive, defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive. These summarized annotations do not include any midwater organisms that may have been observed on ROV descent/ascent or within midwater transects.
 
-Input files are as follows:
-
-1.  SeaTube annotation .csv file. These can be accessed via the [Ocean Networks Canada website](https://data.oceannetworks.ca/SeaTubeSearch).
-2.  Dive Summary .txt files. These can be found on the [expedition's individual dive landing pages](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/), which can be accessed on the NCEI website. The .txt files are within the ROV Ancillary Data section of each dive landing page.
+This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom, ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations, percentage of annotations identified to each taxonomic level, phylum-level community composition, and numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review, number of unidentified biological annotations).
 
 # Annotation Information
 
+Input data are .csv files sourced from the [Ocean Networks Canada SeaTube website](https://data.oceannetworks.ca/SeaTubeSearch).
+
 This report was generated using annotations downloaded from SeaTube on `r annotations_date`.
+
+# Expedition Summary
+
+`r expedition_name` consisted of `r dive_count` total dives, of which `r science_dive_count` were science-focused and `r UCH_dives` explored underwater cultural heritage sites.
 
 # Dive summary metrics
 
