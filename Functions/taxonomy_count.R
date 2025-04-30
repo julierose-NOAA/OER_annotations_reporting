@@ -4,6 +4,6 @@
 taxonomy_count <- function(x) { 
   x |> 
     dplyr::summarize(
-      across(phylum:species, \(x) n_distinct(x, na.rm = TRUE))
+      across(phylum:species, \(x) dplyr::n_distinct(x, na.rm = TRUE))
     )
 }
