@@ -14,7 +14,7 @@ editor: visual
 expedition_name <- "EX2107"
 expedition_title <- "Windows to the Deep 2021: Blake Plateau"
 annotations_date <- "10-21-2024"
-UCH_dives <- 0
+UCH_dives <- 2
 
 #libraries
 library(readr)
@@ -39,8 +39,8 @@ summary_statistics <- read_csv(paste0("summary_statistics_",expedition_name,".cs
 phyla_frequency_percent_all <- read_csv(paste0("phyla_frequency_percent_all_",expedition_name,".csv"),col_names = TRUE)
 
 #calculate total dive number
-dive_count <- nrow(summary_statistics)
-science_dive_count <- dive_count - UCH_dives
+science_dive_count <- nrow(summary_statistics)
+total_dive_count <- science_dive_count + UCH_dives
 
 #calculate percentage of unidentified annotations at each taxonomic level
 annotations_taxonomy_percentage <- summary_statistics |> 
@@ -62,6 +62,11 @@ annotations_taxonomy_percentage[is.na(annotations_taxonomy_percentage)] = 0
 bottom_min <- round(min(summary_statistics$bottom_time_hours),2)
 bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
 bottom_median <- round(median(summary_statistics$bottom_time_hours),2)
+
+#Mean depth
+depth_min <- round(min(summary_statistics$mean_depth),0)
+depth_max <- round(max(summary_statistics$mean_depth),0)
+depth_median <- round(median(summary_statistics$mean_depth),0)
 
 #number of geoform/substrate annotations
 geo_sub_annotations_min <- min(summary_statistics$geoform_or_substrate)
@@ -133,7 +138,7 @@ species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 
 # Data Summary
 
-This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). These data have been QAQC\'d by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the benthic portion of the dive, defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive. These summarized annotations do not include any midwater organisms that may have been observed on ROV descent/ascent or within midwater transects.
+This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). These data have been QAQC'd by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the benthic portion of the dive, defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive. These summarized annotations do not include any midwater organisms that may have been observed on ROV descent/ascent or within midwater transects.
 
 This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom, ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations, percentage of annotations identified to each taxonomic level, phylum-level community composition, and numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review, number of unidentified biological annotations).
 
@@ -145,7 +150,7 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 
 # Expedition Summary
 
-`r expedition_name` consisted of `r dive_count` total dives, of which `r science_dive_count` were science-focused and `r UCH_dives` explored underwater cultural heritage sites.
+`r expedition_name` consisted of `r total_dive_count` total dives, of which `r science_dive_count` were science-focused and `r UCH_dives` explored underwater cultural heritage sites.
 
 # Dive summary metrics
 
@@ -184,11 +189,19 @@ ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours duri
 #}
 ```
 
-Add figure here for mean ROV depth while on bottom
+```{r}
+#| echo: false
 
-###### [Figure 2]{custom-style="Strong"}. Mean ROV depth in meters.
+ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
+  geom_col(fill = "#0085CA") +
+  labs(x = "Dive Number", y = "Depth (m)") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+```
 
-The shallowest dive during `r expedition_name` had a mean depth of \[add link\], and the deepest dive had a mean depth of \[add link\]. Overall, dives within `r expedition_name` averaged \[add link\] meters in depth.
+###### [Figure 2]{custom-style="Strong"}. Mean ROV depth in meters during the benthic portion of each dive.
+
+The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives within `r expedition_name` had a median depth of `r depth_median` meters.
 
 # Observational metrics
 
@@ -360,11 +373,11 @@ The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Co
 percent_flagged_rounded <- round(summary_statistics$percent_flagged,1)
 
 ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#003087") +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
   ylim(0,100) +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  geom_text(aes(label = percent_flagged_rounded), vjust = 0, family = "Roboto", color = "#003087") + 
+  geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#003087") + 
   OER_theme
 ```
 
@@ -376,7 +389,7 @@ The percentage of annotations flagged for review within each dive during `r expe
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#003087") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
