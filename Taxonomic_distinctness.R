@@ -25,13 +25,11 @@ setwd(wd)
 #set standard name to refer to your data
 data_name <- "EX2104"
 
-#create vector of dive numbers for your dataset
-dive_number<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) #this needs updating for each
-#analysis with the corresponding dives; it would be nice to extract this from
-#the clean_annotations data frame or from the dive summaries themselves
-
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                                             data_name, ".csv"), col_names = TRUE)
+#create vector of dive numbers for your dataset
+dive_number<-unique(benthic_annotations$dive_number)
+dive_number
 
 #------------------------------------------------------------------------------
 #BEFORE RUNNING THIS CODE, check the summary statistics and decide which dives
