@@ -106,6 +106,11 @@ bottom_time_hours <- benthic_annotations |>
 
 bottom_time_hours$bottom_time_hours <- as.numeric(bottom_time_hours$bottom_time_hours)
 
+#calculate mean depth during ROV time on bottom
+mean_benthic_depth <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::summarize(mean_depth = mean(depth_m))
+
 #If post-2020, extract ROV distance traveled from the dive summary .txt files
 #and combine with ROV bottom time into new ROV_metrics data frame, if pre-2020
 #just rename bottom_time_hours to ROV_metrics
@@ -124,7 +129,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
-summary_statistics <- list(benthic_start, biological_annotations, percent_flagged, unidentified_animalia, 
+summary_statistics <- list(benthic_start, mean_benthic_depth, biological_annotations, percent_flagged, unidentified_animalia, 
                            interesting_phyla_count, Vertebrata, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
