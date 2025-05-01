@@ -150,7 +150,7 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 
 # Expedition Summary
 
-`r expedition_name` consisted of `r total_dive_count` total dives, of which `r science_dive_count` were science-focused and `r UCH_dives` explored underwater cultural heritage sites.
+`r expedition_name` consisted of `r total_dive_count` total dives, of which `r science_dive_count` were science-focused and `r UCH_dives` explored underwater cultural heritage sites. ROV time on bottom ranged from `r bottom_min` to `r bottom_max` with a median of `r bottom_median` across all dives. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median`. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
 
 # Dive summary metrics
 
@@ -377,7 +377,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
   ylim(0,100) +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#003087") + 
+  geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#003087", size = 3.5) + 
   OER_theme
 ```
 
