@@ -23,7 +23,9 @@ clean_annotation <- function(x) {
                   `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
                   `SBECTD9PLUSDEEPDISCOVERER_23978_Practical.Salinity`, 
                   `Biota`,`Taxonomy`, `Kingdom`, `Phylum`, `Class`, `Order`, `Family`,
-                  `Genus`, `Species`,`Component`) |> 
+                  `Genus`, `Species`,`Component`, `Substrate.Origin`, 
+                  `Substrate.Class`, `Substrate.Subclass`, `Substrate.Group`,
+                  `Substrate.Subgroup`, `Geoform.Origin`, `Geoform`, `Geoform.Type`) |> 
       dplyr::mutate(across(`Dive.Name`, \(x) stringr::str_replace(x, "-", "_"))) |>
       dplyr::mutate(across(`Dive.Name`, \(x) stringr::str_replace(x, ":", " "))) |> 
       dplyr::mutate(across(`Dive.Name`, \(x) stringr::word(x,1))) |> 
@@ -54,7 +56,15 @@ clean_annotation <- function(x) {
                     family = `Family`,
                     genus = `Genus`,
                     species = `Species`,
-                    component = `Component`) |>
+                    component = `Component`,
+                    substrate_origin = `Substrate.Origin`, 
+                    substrate_class = `Substrate.Class`, 
+                    substrate_subclass =`Substrate.Subclass`,
+                    substrate_group = `Substrate.Group`,
+                    substrate_subgroup = `Substrate.Subgroup`,
+                    geoform_origin = `Geoform.Origin`,
+                    geoform = `Geoform`,
+                    geoform_type = `Geoform.Type`) |>
       dplyr::mutate(dive_number = toupper(dive_number)) |>
       dplyr::mutate(dive_number = gsub("DIVE","",dive_number)) |>
       dplyr::mutate(dive_number = as.numeric(dive_number)) |>
@@ -73,7 +83,9 @@ clean_annotation <- function(x) {
                   `SBECTD9PLUSDEEPDISCOVERER_23978_Depth`,
                   `SBECTD9PLUSDEEPDISCOVERER_23978_Practical.Salinity`, 
                   `Biota`,`Taxonomy`, `Kingdom`, `Phylum`, `Class`, `Order`, `Family`,
-                  `Genus`, `Species`,`Component`) |> 
+                  `Genus`, `Species`,`Component`, `Substrate.Origin`, 
+                  `Substrate.Class`, `Substrate.Subclass`, `Substrate.Group`,
+                  `Substrate.Subgroup`, `Geoform.Origin`, `Geoform`, `Geoform.Type`) |> 
     dplyr::mutate(across(`Dive.Name`, \(x) stringr::str_replace(x, "-", "_"))) |>
     dplyr::mutate(across(`Dive.Name`, \(x) stringr::str_replace(x, ":", " "))) |> 
     dplyr::mutate(across(`Dive.Name`, \(x) stringr::word(x,1))) |> 
@@ -103,7 +115,15 @@ clean_annotation <- function(x) {
                   family = `Family`,
                   genus = `Genus`,
                   species = `Species`,
-                  component = `Component`) |>
+                  component = `Component`,
+                  substrate_origin = `Substrate.Origin`, 
+                  substrate_class = `Substrate.Class`, 
+                  substrate_subclass =`Substrate.Subclass`,
+                  substrate_group = `Substrate.Group`,
+                  substrate_subgroup = `Substrate.Subgroup`,
+                  geoform_origin = `Geoform.Origin`,
+                  geoform = `Geoform`,
+                  geoform_type = `Geoform.Type`) |>
     dplyr::mutate(dive_number = toupper(dive_number)) |>
     dplyr::mutate(dive_number = gsub("DIVE","",dive_number)) |>
     dplyr::mutate(dive_number = as.numeric(dive_number)) |>
