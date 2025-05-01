@@ -1,5 +1,5 @@
 ---
-title: "EX2107: Windows to the Deep 2021: Blake Plateau"
+title: "EX2104: 2021 North Atlantic Stepping Stones"
 format:
   docx: 
     reference-doc: 2025_OER_for-quarto.docx
@@ -11,10 +11,10 @@ editor: visual
 #| output: false
 
 #set expedition information to use throughout document
-expedition_name <- "EX2107"
-expedition_title <- "Windows to the Deep 2021: Blake Plateau"
+expedition_name <- "EX2104"
+expedition_title <- "North Atlantic Stepping Stones"
 annotations_date <- "10-21-2024"
-UCH_dives <- 2
+UCH_dives <- 0
 
 #libraries
 library(readr)
@@ -138,9 +138,9 @@ species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 
 # Data Summary
 
-This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). These data have been QAQC'd by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the benthic portion of the dive, defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive. These summarized annotations do not include any midwater organisms that may have been observed on ROV descent/ascent or within midwater transects.
+This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). Video was collected using protocols described in the NOAA Ocean Exploration ROV and Telepresence Deepwater Exploration Procedures [manual](https://doi.org/10.25923/n605-za83). These data have been QAQC\'d by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the annotations made during the benthic portion of the dive (defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive) and do not include any annotations that may have been made during ROV descent/ascent or within midwater transects. This report also does not contain any annotations made during UCH dives, which do not have available Dive Summary .txt files.
 
-This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom, ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations, percentage of annotations identified to each taxonomic level, phylum-level community composition, and numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review, number of unidentified biological annotations).
+This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom; ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review; number of unidentified biological annotations).
 
 # Annotation Information
 
