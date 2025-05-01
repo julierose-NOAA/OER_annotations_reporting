@@ -57,7 +57,16 @@ if (length(annotation_paths > 1)) {
   annotation_list<-purrr::map(annotation_paths, 
                               \(x) read.csv(x, header = TRUE, colClasses = 
                                               c("Common.Count" = "character",
-                                                "Component" = "character"), na.strings = ""))
+                                                "Component" = "character",
+                                                "Substrate.Origin" = "character",
+                                                "Substrate.Class" = "character",
+                                                "Substrate.Subclass" = "character",
+                                                "Substrate.Group" = "character",
+                                                "Substrate.Subgroup" = "character",
+                                                "Geoform.Origin" = "character",
+                                                "Geoform" = "character",
+                                                "Geoform.Type" = "character"), 
+                                            na.strings = ""))
   
   annotation_clean<- annotation_list |> 
     purrr::map(clean_annotation) |> 
@@ -67,7 +76,16 @@ if (length(annotation_paths > 1)) {
   annotation_import <- read.csv(paste0(wd, "/annotations/SeaTubeAnnotations_", 
                                        data_name, ".csv"), header = TRUE, 
                                 colClasses = c("Common.Count" = "character",
-                                               "Component" = "character"), na.strings = "")
+                                               "Component" = "character",
+                                               "Substrate.Origin" = "character",
+                                               "Substrate.Class" = "character",
+                                               "Substrate.Subclass" = "character",
+                                               "Substrate.Group" = "character",
+                                               "Substrate.Subgroup" = "character",
+                                               "Geoform.Origin" = "character",
+                                               "Geoform" = "character",
+                                               "Geoform.Type" = "character"),
+                                na.strings = "")
   annotation_clean <- clean_annotation(annotation_import)
 }
 
