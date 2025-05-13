@@ -142,8 +142,6 @@ This report is an expedition-level summary of expert annotations of benthic deep
 
 This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom; ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review; number of unidentified biological annotations).
 
-While this report is focused on benthic communities observed on `r expedition_name`, a forthcoming report will also synthesize information for observed mid-water organisms and will be included in the same repository.
-
 # Annotation Information
 
 Input data are .csv files sourced from the [Ocean Networks Canada SeaTube website](https://data.oceannetworks.ca/SeaTubeSearch).
