@@ -146,9 +146,9 @@ This report provides data visualizations in the form of tables and graphs of:
 
 -   Dive summary metrics (ROV time on bottom; ROV mean depth),
 
--   Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, i.e., Cnidaria, Porifera, Echinodermata, and Vertebrata), and
+-   Annotation metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, i.e., Cnidaria, Porifera, Echinodermata, and Vertebrata), and
 
--   Quality control metrics (percentage of annotations flagged for review; number of unidentified biological annotations).
+-   Quality control metrics (percentage of annotations flagged for review at the time of report generation; number of unidentified biological annotations).
 
 # Annotation Information
 
@@ -211,7 +211,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
 
 The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives during `r expedition_name` had a median depth of `r depth_median` meters.
 
-# Observational Metrics
+# Annotation Metrics
 
 ```{r}
 #| echo: false
@@ -309,9 +309,9 @@ ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phy
 
 ```
 
-###### [Figure 5]{custom-style="Strong"}. Phylum-level observations and community composition
+###### [Figure 5]{custom-style="Strong"}. Phylum-level annotations and community composition
 
-Phyla observed during `r expedition_name` varied by dive and are illustrated here using color intensity, which indicates the relative contribution of each phylum to the total benthic biological annotations for each dive. The most common phyla observed during EX2104 can be identified by examining the variation in color intensity across rows. The community composition observed during EX2104 can be compared across dives by examining the variation in color intensity across columns.
+Phyla annotated during `r expedition_name` varied by dive and are illustrated here using color intensity, which indicates the relative contribution of each phylum to the total benthic biological annotations for each dive. The most common phyla annotated during EX2104 can be identified by examining the variation in color intensity across rows. The community composition annotated during EX2104 can be compared across dives by examining the variation in color intensity across columns.
 
 ```{r}
 #| echo: false
@@ -325,7 +325,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Cnidaria)) +
 
 ###### [Figure 6]{custom-style="Strong"}. Total Cnidaria annotations.
 
-Cnidaria is a phylum of particular interest as it contains a variety of habitat-building invertebrates commonly observed in the deep sea, including corals and sea anemones. The total number of cnidarians observed during each dive of `r expedition_name` ranged from `r cnidaria_min` to `r cnidaria_max` with a median of `r cnidaria_median` cnidarian observations across all dives.
+Cnidaria is a phylum of particular interest as it contains a variety of habitat-building invertebrates commonly observed in the deep sea, including corals and sea anemones. The total number of cnidarians annotated during each dive of `r expedition_name` ranged from `r cnidaria_min` to `r cnidaria_max` with a median of `r cnidaria_median` cnidarian annotations across all dives.
 
 ```{r}
 #| echo: false
@@ -339,7 +339,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
 
 ###### [Figure 7]{custom-style="Strong"}. Total Porifera annotations.
 
-The phylum Porifera includes sponges. The total number of porifera observed during each dive of `r expedition_name` ranged from `r porifera_min` to `r porifera_max` with a median of `r porifera_median` porifera observations across all dives.
+The phylum Porifera includes sponges. The total number of porifera annotated during each dive of `r expedition_name` ranged from `r porifera_min` to `r porifera_max` with a median of `r porifera_median` porifera annotations across all dives.
 
 ```{r}
 #| echo: false
@@ -353,7 +353,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
 
 ###### [Figure 8]{custom-style="Strong"}. Total Echinodermata annotations.
 
-The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including sea stars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms observed during each dive of `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max` with a median of `r echinodermata_median` echinoderm observations across all dives.
+The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including sea stars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms annotated during each dive of `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max` with a median of `r echinodermata_median` echinoderm annotations across all dives.
 
 ```{r}
 #| echo: false
@@ -367,7 +367,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
 
 ###### [Figure 9]{custom-style="Strong"}. Total Vertebrata annotations.
 
-The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates observed during each dive of `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max` with a median of `r vertebrata_median` vertebrate observations across all dives.
+The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates annotated during each dive of `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max` with a median of `r vertebrata_median` vertebrate annotations across all dives.
 
 ```{r}
 #| echo: false
