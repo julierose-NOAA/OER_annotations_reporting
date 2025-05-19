@@ -13,7 +13,7 @@ editor: visual
 #set expedition information to use throughout document
 expedition_name <- "EX2104"
 expedition_title <- "North Atlantic Stepping Stones"
-annotations_date <- "10-21-2024"
+annotations_date <- "October 21, 2024"
 UCH_dives <- 0
 
 #libraries
@@ -138,9 +138,17 @@ species_median <- round(median(annotations_taxonomy_percentage_wide$species),0)
 
 # Data Summary
 
-This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of ROV dives within the NOAA Ocean Exploration [ASPIRE](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). Associated NOAA Ocean Exploration cruise reports are available from the NOAA [Institutional Repository](https://repository.library.noaa.gov/). Video was collected using protocols described in the NOAA Ocean Exploration ROV and Telepresence Deepwater Exploration Procedures [manual](https://doi.org/10.25923/n605-za83). These data have been QAQC'd by the France Lab at the University of Louisiana Lafayette, following protocols described in the Annotating NOAA Ocean Exploration Video [manual](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the annotations made during the benthic portion of the dive (defined using the on- and off-bottom times provided in the [Dive Summary .txt files](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/) available for each dive) and do not include any annotations that may have been made during ROV descent/ascent or within midwater transects. This report also does not contain any annotations made during UCH dives, which do not have available Dive Summary .txt files.
+This report is an expedition-level summary of expert annotations of benthic deep-sea communities and substrate for groups of remotely operated vehicle (ROV) dives within the NOAA Ocean Exploration [Atlantic Seafloor Partnership for Integrated Research and Exploration (ASPIRE)](https://oceanexplorer.noaa.gov/explorations/aspire/welcome.html) campaign (2017-2022). Associated NOAA Ocean Exploration cruise reports are available from the [NOAA Institutional Repository](https://repository.library.noaa.gov/). Video was collected using protocols described in the [NOAA Ocean Exploration ROV and Telepresence Deepwater Exploration Procedures manual](https://doi.org/10.25923/n605-za83).
 
-This report provides data visualizations in the form of tables and graphs of: 1. Dive summary metrics (ROV time on bottom; ROV mean depth); 2. Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, including Cnidaria, Porifera, Echinodermata, and Vertebrata); and 3. Quality control metrics (percentage of annotations flagged for review; number of unidentified biological annotations).
+These annotations have undergone quality control by the France Lab at the University of Louisiana Lafayette following protocols described in the [Annotating NOAA Ocean Exploration Video guidance](https://oceanexplorer.noaa.gov/okeanos/collaboration-tools/science_annotations/media/NOAA_Ocean_Exploration_Video_Annotations.pdf). These summarized annotations only represent the annotations made during the benthic portion of the dives (defined using the on- and off-bottom times in the Dive Summary Reports available for each dive on the [expedition-specific landing page](https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/)) and do not include any annotations that may have been made during ROV descent/ascent or during water column exploration. This report also does not contain any annotations made during maritime heritage dives.
+
+This report provides data visualizations in the form of tables and graphs of:
+
+-   Dive summary metrics (ROV time on bottom; ROV mean depth),
+
+-   Observational metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, i.e., Cnidaria, Porifera, Echinodermata, and Vertebrata), and
+
+-   Quality control metrics (percentage of annotations flagged for review; number of unidentified biological annotations).
 
 # Annotation Information
 
@@ -150,9 +158,9 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 
 # Expedition Summary
 
-`r expedition_name` consisted of `r total_dive_count` total dives, of which `r UCH_dives` explored underwater cultural heritage sites and the remaining `r science_dive_count` dives explored the benthos and water column. ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
+`r expedition_name` consisted of `r total_dive_count` total dives, of which `r UCH_dives` explored maritime heritage sites and the remaining `r science_dive_count` dives explored the benthos and water column. ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
 
-# Dive summary metrics
+# Dive Summary Metrics
 
 ```{r}
 #| echo: false
@@ -167,7 +175,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
 
 ###### [Figure 1]{custom-style="Strong"}. ROV time on bottom in hours.
 
-ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours during `r expedition_name`, with a median time on bottom of `r bottom_median` hours.
+ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours during `r expedition_name` with a median time on bottom of `r bottom_median` hours.
 
 ```{r}
 #| echo: false
@@ -201,37 +209,23 @@ ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
 
 ###### [Figure 2]{custom-style="Strong"}. Mean ROV depth in meters during the benthic portion of each dive.
 
-The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives within `r expedition_name` had a median depth of `r depth_median` meters.
+The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives during `r expedition_name` had a median depth of `r depth_median` meters.
 
-# Observational metrics
-
-```{r}
-#| echo: false
-
-ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
-  geom_col(fill = "#34bddf") +
-  labs(x = "Dive Number", y = "Number of Annotations") +
-  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  OER_theme
-```
-
-###### [Figure 3]{custom-style="Strong"}. Total geoform or substrate annotations.
-
-The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with a median of `r geo_sub_annotations_median` annotations .
+# Observational Metrics
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = phylum)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 ```
 
-###### [Figure 4]{custom-style="Strong"}. Total biological annotations.
+###### [Figure 3]{custom-style="Strong"}. Total biological annotations.
 
-The total number of benthic biological annotations within each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` across all dives.
+The total number of benthic biological annotations (all phyla) for each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` annotations across all dives.
 
 ```{r}
 #| echo: false
@@ -283,11 +277,21 @@ ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
         plot.margin = margin(0.5,0.5,0.5,1.5, "cm"))
 ```
 
-###### [Figure 5]{custom-style="Strong"}. Percentage of annotations identified to each taxonomic level
+###### [Figure 4]{custom-style="Strong"}. Percentage of annotations identified to each taxonomic level
 
-One common problem in deep-sea biology is that many taxa observed in video can only be identified to high taxonomic levels, like phylum or class, and are not able to be identified to lower taxonomic levels, such as genus or species. The figure above shows the percentage of biological annotations that could be identified to each taxonomic level, from class through species, within each dive within `r expedition_name`.
+One common problem in deep-sea biology is that many taxa observed in video can only be identified to high taxonomic levels, like phylum or class, and cannot be identified to lower taxonomic levels, such as genus or species. The figure above shows the percentage of biological annotations (all phyla) that could be identified to each taxonomic level, from class through species, for each dive during `r expedition_name`.
 
-Across all dives, the median percentage of benthic biological annotations that could be identified to the class level was `r class_median`%, with the range `r class_min` - `r class_max`. The median percentage of benthic biological annotations that could be identified to the order level was `r order_median`%, range `r order_min` - `r order_max`. The median percentage of benthic biological annotations that could be identified to the family level was `r family_median`%, range `r family_min` - `r family_max`. The median percentage of benthic biological annotations that could be identified to the genus level was `r genus_median`%, range `r genus_min` - `r genus_max`. The median percentage of benthic biological annotations that could be identified to the species level was `r species_median`%, range `r species_min` - `r species_max`.
+Across all dives:
+
+-   The percentage of benthic biological annotations that could be identified to the class level ranged from `r class_min`-`r class_max` with a median of `r class_median`%.
+
+-   The percentage of benthic biological annotations that could be identified to the order level ranged from `r order_min`-`r order_max` with a median of `r order_median`%.
+
+-   The percentage of benthic biological annotations that could be identified to the family level ranged from `r family_min`-`r family_max` with a median of `r family_median`%.
+
+-   The percentage of benthic biological annotations that could be identified to the genus level ranged from `r genus_min`-`r genus_max` with a median of `r genus_median`%.
+
+-   The percentage of benthic biological annotations that could be identified to the species level ranged from `r species_min`-`r species_max` with a median of `r species_median`%.
 
 ```{r}
 #| echo: false
@@ -305,65 +309,79 @@ ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phy
 
 ```
 
-###### [Figure 6]{custom-style="Strong"}. Phylum-level community composition
+###### [Figure 5]{custom-style="Strong"}. Phylum-level observations and community composition
 
-The figure above shows the phyla observed across all dives within `r expedition_name`. The color intensity indicates the relative contribution of each phylum to the total benthic biological annotations within each dive. The most common phyla observed can be identified by comparing the variation in color intensity across rows. The community composition can be compared across dives by observing the variation in color intensity across columns.
+Phyla observed during `r expedition_name` varied by dive and are illustrated here using color intensity, which indicates the relative contribution of each phylum to the total benthic biological annotations for each dive. The most common phyla observed during EX2104 can be identified by examining the variation in color intensity across rows. The community composition observed during EX2104 can be compared across dives by examining the variation in color intensity across columns.
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Cnidaria)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 ```
 
-###### [Figure 7]{custom-style="Strong"}. Total Cnidaria annotations.
+###### [Figure 6]{custom-style="Strong"}. Total Cnidaria annotations.
 
-Cnidaria is a phylum of particular interest as it contains a variety of habitat-building invertebrates commonly observed in the deep sea, including corals and sea anemones. The total number of cnidarians observed across dives within `r expedition_name` ranged from `r cnidaria_min` to `r cnidaria_max`, with a median of `r cnidaria_median`.
+Cnidaria is a phylum of particular interest as it contains a variety of habitat-building invertebrates commonly observed in the deep sea, including corals and sea anemones. The total number of cnidarians observed during each dive of `r expedition_name` ranged from `r cnidaria_min` to `r cnidaria_max` with a median of `r cnidaria_median` cnidarian observations across all dives.
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 ```
 
-###### [Figure 8]{custom-style="Strong"}. Total Porifera annotations.
+###### [Figure 7]{custom-style="Strong"}. Total Porifera annotations.
 
-The phylum Porifera includes sponges. The total number of porifera observations across dives within `r expedition_name` ranged from `r porifera_min` to `r porifera_max`, with a median of `r porifera_median`.
+The phylum Porifera includes sponges. The total number of porifera observed during each dive of `r expedition_name` ranged from `r porifera_min` to `r porifera_max` with a median of `r porifera_median` porifera observations across all dives.
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 ```
 
-###### [Figure 9]{custom-style="Strong"}. Total Echinodermata Annotations.
+###### [Figure 8]{custom-style="Strong"}. Total Echinodermata annotations.
 
-The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including seastars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms observed across dives within `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max`, with a median of `r echinodermata_median`.
+The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including sea stars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms observed during each dive of `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max` with a median of `r echinodermata_median` echinoderm observations across all dives.
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
-  geom_col(fill = "#34bddf") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
 ```
 
-###### [Figure 10]{custom-style="Strong"}. Total Vertebrata Annotations.
+###### [Figure 9]{custom-style="Strong"}. Total Vertebrata annotations.
 
-The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates observed across dives within `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max`, with a median of `r vertebrata_median`.
+The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates observed during each dive of `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max` with a median of `r vertebrata_median` vertebrate observations across all dives.
+
+```{r}
+#| echo: false
+
+ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
+  geom_col(fill = "#0085CA") +
+  labs(x = "Dive Number", y = "Number of Annotations") +
+  scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  OER_theme
+```
+
+###### [Figure 10]{custom-style="Strong"}. Total geoform or substrate annotations.
+
+The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with a median of `r geo_sub_annotations_median` annotations across all dives.
 
 # Quality control metrics
 
@@ -373,23 +391,23 @@ The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Co
 percent_flagged_rounded <- round(summary_statistics$percent_flagged,1)
 
 ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
-  geom_col(fill = "#003087") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
   ylim(0,100) +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#003087", size = 3.5) + 
+  geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#0085CA", size = 3.5) + 
   OER_theme
 ```
 
 ###### [Figure 11]{custom-style="Strong"}. Percentage of annotations flagged for review.
 
-The percentage of annotations flagged for review within each dive during `r expedition_name` ranged from `r percent_flagged_min` to `r percent_flagged_max` with a median of `r percent_flagged_median` across all dives.
+The percentage of annotations flagged for review for each dive of `r expedition_name` ranged from `r percent_flagged_min` to `r percent_flagged_max` with a median of `r percent_flagged_median` annotations flagged for review across all dives.
 
 ```{r}
 #| echo: false
 
 ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
-  geom_col(fill = "#003087") +
+  geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
   OER_theme
@@ -398,4 +416,4 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
 
 ###### [Figure 12]{custom-style="Strong"}. Number of unidentified biological annotations.
 
-The number of benthic biological annotations that were unable to be identified to the phylum level during `r expedition_name` varied from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` across all dives.
+The number of benthic biological annotations that were unable to be identified to the phylum level during `r expedition_name` ranged from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` unidentified biological annotations across all dives.
