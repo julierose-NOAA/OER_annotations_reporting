@@ -160,7 +160,7 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 
 # Expedition Summary
 
-`r expedition_name` consisted of `r total_dive_count` total dives, of which `r UCH_dives` explored maritime heritage sites and the remaining `r science_dive_count` dives explored the benthos and water column. ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
+`r expedition_name` consisted of `r total_dive_count` total dives`r if(UCH_dives > 0){paste0(", of which ", UCH_dives, " dives explored maritime heritage sites and the remaining ", science_dive_count, " dives explored the benthos and water column")} else{" which explored the benthos and water column."}` ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
 
 # Dive Summary Metrics
 
