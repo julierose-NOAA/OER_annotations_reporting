@@ -64,19 +64,19 @@ bottom_max <- round(max(summary_statistics$bottom_time_hours),2)
 bottom_median <- round(median(summary_statistics$bottom_time_hours),2)
 
 #Mean depth
-depth_min <- round(min(summary_statistics$mean_depth),0)
-depth_max <- round(max(summary_statistics$mean_depth),0)
-depth_median <- round(median(summary_statistics$mean_depth),0)
+depth_min <- format(round(min(summary_statistics$mean_depth),0),big.mark = ",")
+depth_max <- format(round(max(summary_statistics$mean_depth),0), big.mark = ",")
+depth_median <- format(round(median(summary_statistics$mean_depth),0), big.mark = ",")
 
 #number of geoform/substrate annotations
-geo_sub_annotations_min <- min(summary_statistics$geoform_or_substrate)
-geo_sub_annotations_max <- max(summary_statistics$geoform_or_substrate)
-geo_sub_annotations_median <- median(summary_statistics$geoform_or_substrate)
+geo_sub_annotations_min <- format(min(summary_statistics$geoform_or_substrate),big.mark = ",")
+geo_sub_annotations_max <- format(max(summary_statistics$geoform_or_substrate),big.mark = ",")
+geo_sub_annotations_median <- format(median(summary_statistics$geoform_or_substrate),big.mark = ",")
 
 #number of biological annotations
-bio_annotations_min <- min(summary_statistics$phylum)
-bio_annotations_max <- max(summary_statistics$phylum)
-bio_annotations_median <- median(summary_statistics$phylum)
+bio_annotations_min <- format(min(summary_statistics$phylum),big.mark = ",")
+bio_annotations_max <- format(max(summary_statistics$phylum),big.mark = ",")
+bio_annotations_median <- format(median(summary_statistics$phylum),big.mark = ",")
 
 #percentage annotations flagged for review
 percent_flagged_min <- round(min(summary_statistics$percent_flagged),1)
@@ -84,29 +84,29 @@ percent_flagged_max <- round(max(summary_statistics$percent_flagged),1)
 percent_flagged_median <- round(median(summary_statistics$percent_flagged),1)
 
 #number of unidentified biological annotations
-unID_bio_min <- min(summary_statistics$Unidentified_Biota)
-unID_bio_max <- max(summary_statistics$Unidentified_Biota)
-unID_bio_median <- median(summary_statistics$Unidentified_Biota)
+unID_bio_min <- format(min(summary_statistics$Unidentified_Biota),big.mark = ",")
+unID_bio_max <- format(max(summary_statistics$Unidentified_Biota),big.mark = ",")
+unID_bio_median <- format(median(summary_statistics$Unidentified_Biota),big.mark = ",")
 
 #number of Cnidaria annotations
-cnidaria_min <- min(summary_statistics$Cnidaria)
-cnidaria_max <- max(summary_statistics$Cnidaria)
-cnidaria_median <- median(summary_statistics$Cnidaria)
+cnidaria_min <- format(min(summary_statistics$Cnidaria),big.mark = ",")
+cnidaria_max <- format(max(summary_statistics$Cnidaria),big.mark = ",")
+cnidaria_median <- format(median(summary_statistics$Cnidaria),big.mark = ",")
 
 #number of Porifera annotations
-porifera_min <- min(summary_statistics$Porifera)
-porifera_max <- max(summary_statistics$Porifera)
-porifera_median <- median(summary_statistics$Porifera)
+porifera_min <- format(min(summary_statistics$Porifera),big.mark = ",")
+porifera_max <- format(max(summary_statistics$Porifera),big.mark = ",")
+porifera_median <- format(median(summary_statistics$Porifera),big.mark = ",")
 
 #number of Echinodermata annotations
-echinodermata_min <- min(summary_statistics$Echinodermata)
-echinodermata_max <- max(summary_statistics$Echinodermata)
-echinodermata_median <- median(summary_statistics$Echinodermata)
+echinodermata_min <- format(min(summary_statistics$Echinodermata),big.mark = ",")
+echinodermata_max <- format(max(summary_statistics$Echinodermata),big.mark = ",")
+echinodermata_median <- format(median(summary_statistics$Echinodermata),big.mark = ",")
 
 #number of Vertebrata annotations
-vertebrata_min <- min(summary_statistics$Vertebrata)
-vertebrata_max <- max(summary_statistics$Vertebrata)
-vertebrata_median <- median(summary_statistics$Vertebrata)
+vertebrata_min <- format(min(summary_statistics$Vertebrata),big.mark = ",")
+vertebrata_max <- format(max(summary_statistics$Vertebrata),big.mark = ",")
+vertebrata_median <- format(median(summary_statistics$Vertebrata),big.mark = ",")
 
 #calculate min/max/median for percent unidentified at each taxonomic level
 annotations_taxonomy_percentage_wide <- summary_statistics |> 
