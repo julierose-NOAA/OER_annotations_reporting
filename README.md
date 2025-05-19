@@ -1,5 +1,3 @@
-![](Images/OER_DataLab2.png)
-
 # Ocean Exploration benthic annotations reporting
 
 Uses locally stored SeaTube annotation .csv files Annotations can be groups of dives saved as single .csv files or a combined .csv file with multiple dives.
