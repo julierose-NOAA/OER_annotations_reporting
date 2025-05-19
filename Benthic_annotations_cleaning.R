@@ -182,3 +182,6 @@ View(benthic_annotations)
 dir.create(paste0(wd,"/exports/"))
 write.csv(benthic_annotations, paste0(wd, "/exports/benthic_annotations_", 
                                       data_name, ".csv"), row.names = FALSE)
+
+write.csv(benthic_times, paste0(wd,"/exports/benthic_times_", data_name, ".csv"),
+          row.names = FALSE)
