@@ -428,4 +428,4 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
 
 ###### [Figure 12]{custom-style="Strong"}. Number of unidentified biological annotations.
 
-The number of benthic biological annotations that were unable to be identified to the phylum level during `r expedition_name` ranged from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` unidentified biological annotations across all dives.
+The number of annotations that were identified as being biological, but without an associated phylum-level identification during `r expedition_name` ranged from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` unidentified biological annotations across all dives.
