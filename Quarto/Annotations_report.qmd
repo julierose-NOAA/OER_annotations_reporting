@@ -172,6 +172,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Hours") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -206,6 +207,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Depth (m)") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -222,6 +224,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = phylum)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -322,6 +325,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Cnidaria)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -336,6 +340,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -350,6 +355,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -364,6 +370,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -378,6 +385,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 ```
 
@@ -397,6 +405,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
   labs(x = "Dive Number", y = "Percentage of Total Annotations") +
   ylim(0,100) +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   geom_text(aes(label = percent_flagged_rounded), vjust = -0.2, family = "Roboto", color = "#0085CA", size = 3.5) + 
   OER_theme
 ```
@@ -412,6 +421,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
+  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
   OER_theme
 
 ```
