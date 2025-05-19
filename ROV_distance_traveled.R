@@ -23,7 +23,8 @@ dive_name <- "EX2104_DIVE01"
 
 #location of the benthic times data frame that is an output of the 
 #Benthic_annotations_cleaning script
-benthic_times_wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/ROV_track/"
+benthic_times_wd <- paste0("C:/Users/julie.rose/Documents/1-OER/Biodiversity/", 
+                           expedition, "/exports/")
 
 #import benthic times data frame
 benthic_times <- read.csv(paste0(benthic_times_wd,"benthic_times_",expedition,".csv"), 
