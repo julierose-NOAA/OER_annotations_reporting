@@ -220,7 +220,7 @@ The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`
 ```{r}
 #| echo: false
 
-ggplot(summary_statistics, aes(x = dive_number, y = phylum)) +
+ggplot(summary_statistics, aes(x = dive_number, y = total_biota)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
