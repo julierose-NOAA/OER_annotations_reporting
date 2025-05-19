@@ -34,7 +34,7 @@ benthic_start <- benthic_annotations |>
   dplyr::select("dive_number", "benthic_start") |> 
   dplyr::distinct()
 
-#Overall summary statistics for substrate and biological annotations
+#Overall summary statistics for substrate annotations
 substrate_annotations <- benthic_annotations |> 
   dplyr::filter(taxonomy %in% c("CMECS", "Simplified CMECS")) |> 
   dplyr::select("dive_number", "component") |> 
@@ -42,12 +42,28 @@ substrate_annotations <- benthic_annotations |>
   dplyr::summarize(geoform_or_substrate = sum(!is.na(component)))
 View(substrate_annotations)
 
+#count number of biological annotations that are identified as animals but have
+#no phylum-level identification
+unidentified_animalia <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::filter(biota == "Biota", is.na(phylum), kingdom == "Animalia") |> 
+  dplyr::summarize(Unidentified_Biota = dplyr::n())
+View(unidentified_animalia)
+
+#sum of biological annotations by taxonomic level
 biological_annotations <- benthic_annotations |>
   dplyr::filter(biota == "Biota") |> 
   dplyr::select("dive_number","species","genus","family","order","class","phylum") |> 
   dplyr::group_by(dive_number) |>
   dplyr::summarize(across(phylum:species, \(x) sum(!is.na(x))))
 View(biological_annotations)
+
+#Overall summary statistics for biological annotations, counts total biota as
+#the sum of total phylum-level annotations plus the unidentified biota
+biological_annotations <- biological_annotations |> 
+  dplyr::left_join(unidentified_animalia, by = join_by(dive_number)) |> 
+  dplyr::mutate(Unidentified_Biota = replace_na(Unidentified_Biota, 0)) |> 
+  dplyr::mutate(total_biota = phylum + Unidentified_Biota)
 
 #percentage of annotations flagged for review
 percent_flagged <- benthic_annotations |> 
@@ -68,14 +84,6 @@ Vertebrata <- benthic_annotations |>
   dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |>
   tidyr::drop_na(class) |> 
   dplyr::summarize(Vertebrata = dplyr::n())
-
-#count number of biological annotations that are identified as animals but have
-#no phylum-level identification
-unidentified_animalia <- benthic_annotations |> 
-  dplyr::group_by(dive_number) |> 
-  dplyr::filter(biota == "Biota", is.na(phylum), kingdom == "Animalia") |> 
-  dplyr::summarize(Unidentified_Biota = dplyr::n())
-View(unidentified_animalia)
 
 #compare relative contributions of observed phyla to counts of total biological
 #annotations
@@ -129,7 +137,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
-summary_statistics <- list(benthic_start, mean_benthic_depth, biological_annotations, percent_flagged, unidentified_animalia, 
+summary_statistics <- list(benthic_start, mean_benthic_depth, biological_annotations, percent_flagged, 
                            interesting_phyla_count, Vertebrata, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
