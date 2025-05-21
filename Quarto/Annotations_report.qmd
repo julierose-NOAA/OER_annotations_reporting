@@ -89,9 +89,9 @@ unID_bio_max <- format(max(summary_statistics$Unidentified_Biota),big.mark = ","
 unID_bio_median <- format(median(summary_statistics$Unidentified_Biota),big.mark = ",")
 
 #number of deep-sea coral annotations
-deep_sea_coral_min <- format(min(summary_statistics$Deep_sea_corals),big.mark = ",")
-deep_sea_coral_max <- format(max(summary_statistics$Deep_sea_corals),big.mark = ",")
-deep_sea_coral_median <- format(median(summary_statistics$Deep_sea_corals),big.mark = ",")
+deep_sea_corals_min <- format(min(summary_statistics$Deep_sea_corals),big.mark = ",")
+deep_sea_corals_max <- format(max(summary_statistics$Deep_sea_corals),big.mark = ",")
+deep_sea_corals_median <- format(median(summary_statistics$Deep_sea_corals),big.mark = ",")
 
 #number of Porifera annotations
 porifera_min <- format(min(summary_statistics$Porifera),big.mark = ",")
@@ -146,7 +146,7 @@ This report provides data visualizations in the form of tables and graphs of:
 
 -   Dive summary metrics (ROV time on bottom; ROV mean depth),
 
--   Annotation metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, i.e., Cnidaria, Porifera, Echinodermata, and Vertebrata), and
+-   Annotation metrics by dive (total numbers of benthic biological and geoform/substrate annotations; percentage of annotations identified to each taxonomic level; phylum-level community composition; numbers of annotations of taxonomic groups of interest, i.e., deep-sea corals, Porifera, Echinodermata, and Vertebrata), and
 
 -   Quality control metrics (percentage of annotations flagged for review at the time of report generation; number of unidentified biological annotations).
 
