@@ -160,7 +160,7 @@ if (benthic_annotations$date_time[1] > "2020-01-01") {
 #counts of substrate annotations, and ROV dive information based on dive number
 
 summary_statistics <- list(benthic_start, mean_benthic_depth, biological_annotations, percent_flagged, 
-                           interesting_phyla_count, Vertebrata, substrate_annotations, 
+                           interesting_phyla_count, Vertebrata, Deep_sea_corals, substrate_annotations, 
                            ROV_metrics) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
