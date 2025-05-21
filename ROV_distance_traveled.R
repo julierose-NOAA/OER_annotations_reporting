@@ -17,8 +17,8 @@ lapply(function_names, source)
 #-------------------------------------------------------------------------------
 #set up steps
 #set file paths and data names that correspond to file names
-ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104/ROV_tracks/"
-expedition <- "EX2104"
+ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803/ROV_tracks/"
+expedition <- "EX1803"
 
 #location of the benthic times data frame that is an output of the 
 #Benthic_annotations_cleaning script. This contains start/end times for all dives
@@ -77,8 +77,6 @@ for(j in ROV_SMA_window){
   ROV_SMA_distance <- c(ROV_SMA_distance, ROV_distance_m)
 }
 
-#add print indicating which dive is being iterated
-
 #create data frame of smoothing window and total ROV distance traveled
 ROV_SMA_df <- as.data.frame(cbind(ROV_SMA_window, ROV_SMA_distance))
 
@@ -97,10 +95,11 @@ ROV_SMA_df_outliers <- as.data.frame(MadMed_out_dist[[3]])
 colnames(ROV_SMA_df_outliers) = c("distance")
 summary(ROV_SMA_df_outliers) #visual check
 
-outlier_threshold <- quantile(ROV_SMA_df_outliers$distance, probs = 0.9) #use 90th percentile b/c values are negative
-ROV_threshold <- ROV_SMA_df[which(ROV_SMA_df$Distance_diff > outlier_threshold, arr.ind = TRUE)[1],]
+outlier_threshold <- ROV_SMA_df |> 
+  dplyr::filter(!Distance_diff %in% ROV_SMA_df_outliers$distance) |> 
+  dplyr::first()
 
-ROV_distance_traveled <- ROV_threshold$ROV_SMA_distance
+ROV_distance_traveled <- outlier_threshold$ROV_SMA_distance
 
 ROV_distance_traveled_vec <- c(ROV_distance_traveled_vec, ROV_distance_traveled)
 
@@ -119,31 +118,29 @@ write.csv(ROV_distance_df, paste0(wd,"/exports/", expedition,"_ROV_distance.csv"
 
 # ggplot2::ggplot(ROV_SMA_df, ggplot2::aes(x = ROV_SMA_window, y = ROV_SMA_distance)) +
 #   ggplot2::geom_point() +
-#   ggplot2::labs(x = "Number of ROV position points used in simple moving average smooth", 
+#   ggplot2::labs(x = "Number of ROV position points used in simple moving average smooth",
 #        y = "ROV distance traveled (m)",
 #        title = "Change in predicted ROV distance traveled with increased smoothing",
-#        subtitle = dive_name) +
+#        subtitle = expedition) +
 #   ggplot2::geom_vline(xintercept = ROV_distance_traveled, color = "#FF6C57", linewidth = 1.5) +
 #   ggplot2::theme_bw()
 
 #------------------------------------------------------------------------------
 #Visualize raw and smoothed track lines
 
-# ROV_smooth_predicted <- ROV_benthic |> 
+# ROV_smooth_predicted <- ROV_benthic |>
 #   dplyr::mutate(Lat_SMA = TTR::SMA(latitude_dd, n = ROV_threshold$ROV_SMA_window),
 #                 Lon_SMA = TTR::SMA(longitude_dd, n = ROV_threshold$ROV_SMA_window),
 #                 Depth_SMA = TTR::SMA(depth_m, n = ROV_threshold$ROV_SMA_window))
 # 
 # #raw data
 # ROV_benthic |>
-#   leaflet::leaflet() |> 
-#   leaflet::addTiles() |>  
+#   leaflet::leaflet() |>
+#   leaflet::addTiles() |>
 #   leaflet::addPolylines(lng = ~longitude_dd, lat = ~latitude_dd)
 # 
 # #smoothed data
 # ROV_smooth_predicted |>
-#   leaflet::leaflet() |> 
-#   leaflet::addTiles() |>  
+#   leaflet::leaflet() |>
+#   leaflet::addTiles() |>
 #   leaflet::addPolylines(lng = ~Lon_SMA, lat = ~Lat_SMA)
-
-
