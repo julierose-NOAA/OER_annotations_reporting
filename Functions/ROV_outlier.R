@@ -76,4 +76,3 @@ out <- function(x,cov.fun=cov.mve,xlab="X",ylab="Y",qval=.975,
   assign(x='.Random.seed', value=oldSeed, envir=.GlobalEnv)
   list(n=n,n.out=n.out,out.val=outval,out.id=id,keep=keep,dis=dis,crit=crit)
 }
-<bytecode: 0x0000021c43bccc28>
