@@ -33,19 +33,12 @@ benthic_times$benthic_start <- lubridate::ymd_hms(benthic_times$benthic_start)
 benthic_times$benthic_end <- lubridate::ymd_hms(benthic_times$benthic_end)
 str(benthic_times) #check to make sure these are the right times for your expedition
 
+#uses names of ROV track files in the expedition folder to generate the vector
+#of dives to use in the loop below
+ROV_dive_numbers <- list.files(path = ROV_filepath, pattern = "[.]csv$", full.names = TRUE)
+ROV_dive_numbers <- sapply(ROV_dive_numbers, ROV_dive_number_extract, USE.NAMES = FALSE)
+
 ROV_distance_traveled_vec <- c() #this will become the vector of distances
-#-------------------------------------------------------------------------------
-#this section needs cleaning up; rename function and move it to new script in  functions
-#folder
-ROV_dive_numbers <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19") #automate extracting this from file names
-
-ROV_name_list <- list.files(path = ROV_filepath, pattern = "[.]csv$", full.names = TRUE)
-test <- function(x) {
-  name <- stringr::str_extract(x, "DIVE(\\d{2})") 
-  stringr::str_replace(name, "DIVE","")
-}
-ROV_name_list <- sapply(ROV_name_list, test, USE.NAMES = FALSE)
-
 #-------------------------------------------------------------------------------
 #the remaining code runs as a loop processing each dive and creating a dataframe
 #please note processing time is approximately 8 minutes PER DIVE on a standard
