@@ -21,7 +21,14 @@ data_name <- "EX2104"
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                        data_name, ".csv"), col_names = TRUE)
 
+distance_traveled <- read.csv(paste0(wd,"/exports/",data_name,"_ROV_distance.csv"))
+View(distance_traveled)
+
 dive_number<-unique(benthic_annotations$dive_number)
+#QC check to make sure the benthic annotations dive numbers match the ROV track
+#dive numbers
+all(dive_number == distance_traveled$dive_number)
+
 dive_number #stop here and cross-reference with dive summary text files - remove
 #text files that have no annotations from the folder or else the ROV_metrics 
 #code below will fail
@@ -141,35 +148,19 @@ mean_benthic_depth <- benthic_annotations |>
   dplyr::group_by(dive_number) |> 
   dplyr::summarize(mean_depth = mean(depth_m))
 
-#If post-2020, extract ROV distance traveled from the dive summary .txt files
-#and combine with ROV bottom time into new ROV_metrics data frame, if pre-2020
-#just rename bottom_time_hours to ROV_metrics
-dive_summary_paths<-list.files(paste0(wd, "/dive_summaries"), 
-                               pattern = "[.]txt$", full.names = TRUE)
-
-if (benthic_annotations$date_time[1] > "2020-01-01") {
-  distance<-purrr::map(dive_summary_paths, 
-                       \(x) import_distance_traveled_post2020(x))
-  ROV_metrics <- cbind(bottom_time_hours, 
-                              distance_traveled_m = unlist(distance))
-} else {
-  ROV_metrics <- bottom_time_hours
-}
-
 #Join counts of biological annotations by taxonomy, counts of interesting phyla,
 #counts of substrate annotations, and ROV dive information based on dive number
 
 summary_statistics <- list(benthic_start, mean_benthic_depth, biological_annotations, percent_flagged, 
                            interesting_phyla_count, Vertebrata, Deep_sea_corals, substrate_annotations, 
-                           ROV_metrics) |> 
+                           bottom_time_hours,distance_traveled) |> 
   purrr::reduce(dplyr::left_join, by = "dive_number")
 
 #replace NA with 0 across whole data frame
 summary_statistics[is.na(summary_statistics)] = 0
 
-#add expedition column to aid in future cross-expedition synthesis
+#move expedition column
 summary_statistics <- summary_statistics |> 
-  dplyr::mutate(expedition = data_name) |> 
   dplyr::relocate(expedition, .before = dive_number)
 
 View(summary_statistics)
