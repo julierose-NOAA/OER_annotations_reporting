@@ -73,17 +73,39 @@ percent_flagged <- benthic_annotations |>
 #count annotations by dive for major phyla of interest to OER
 interesting_phyla_count <- benthic_annotations |> 
   dplyr::group_by(dive_number) |> 
-  dplyr::summarize(Cnidaria = sum(phylum == "Cnidaria", na.rm = TRUE),
-                   Echinodermata = sum(phylum == "Echinodermata", na.rm = TRUE),
+  dplyr::summarize(Echinodermata = sum(phylum == "Echinodermata", na.rm = TRUE),
                    Porifera = sum(phylum == "Porifera", na.rm = TRUE))
                   
-  
+#count annotations of Chordata within the Vertebrata subphylum  
 Vertebrata <- benthic_annotations |>
   dplyr::group_by(dive_number) |> 
   dplyr::filter(phylum == "Chordata") |>   
   dplyr::filter(! class %in% c("Thaliacea","Ascidiacea", "Appendicularia", "Larvacea")) |>
   tidyr::drop_na(class) |> 
   dplyr::summarize(Vertebrata = dplyr::n())
+
+#count coral annotations using the Deep Sea Coral Program code found here:
+#https://github.com/RobertMcGuinn/deepseatools/blob/master/code/143469.R
+Deep_sea_corals <- benthic_annotations |> 
+  dplyr::group_by(dive_number) |> 
+  dplyr::filter(phylum == "Cnidaria") |>
+  dplyr::filter(order == "Scleractinia" |
+                  order == "Antipatharia" |
+                  genus == "Savalia" |
+                  genus == "Kulamanamana" |
+                  genus == "Gerardia" |
+                  family == "Stylasteridae" |
+                  order  == "Alcyonacea" |
+                  order ==  "Gorgonacea" |
+                  order ==  "Helioporacea" |
+                  order == "Pennatulacea" |
+                  order == "Scleralcyonacea" |
+                  genus == "Solanderia" |
+                  genus == "Janaria" |
+                  genus == "Hydrocorella" |
+                  genus == "Hydrodendron" |
+                  order == "Malacalcyonacea") |> 
+  dplyr::summarize(Deep_sea_corals = dplyr::n())
 
 #compare relative contributions of observed phyla to counts of total biological
 #annotations
