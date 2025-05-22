@@ -17,8 +17,8 @@ lapply(function_names, source)
 #-------------------------------------------------------------------------------
 #set up steps
 #set file paths and data names that correspond to file names
-ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803/ROV_tracks/"
-expedition <- "EX1803"
+ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2/ROV_tracks/"
+expedition <- "EX1903L2"
 
 #location of the benthic times data frame that is an output of the 
 #Benthic_annotations_cleaning script. This contains start/end times for all dives
@@ -42,7 +42,7 @@ ROV_distance_traveled_vec <- c() #this will become the vector of distances
 #-------------------------------------------------------------------------------
 #the remaining code runs as a loop processing each dive and creating a dataframe
 #please note processing time is approximately 8 minutes PER DIVE on a standard
-#laptop
+#laptop for expeditions post-2020
 
 for(i in ROV_dive_numbers){
 #import
