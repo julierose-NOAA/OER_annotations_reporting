@@ -12,11 +12,11 @@ function_names <- list.files(path = "C:/Users/julie.rose/Documents/GitHub/OER_bi
 lapply(function_names, source)
 
 #set working directory
-wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2104"
+wd <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1803"
 setwd(wd)
 
 #set standard name to refer to your data
-data_name <- "EX2104"
+data_name <- "EX1803"
 
 benthic_annotations<-readr::read_csv(paste0(wd, "/exports/benthic_annotations_", 
                        data_name, ".csv"), col_names = TRUE)
@@ -68,8 +68,8 @@ View(biological_annotations)
 #Overall summary statistics for biological annotations, counts total biota as
 #the sum of total phylum-level annotations plus the unidentified biota
 biological_annotations <- biological_annotations |> 
-  dplyr::left_join(unidentified_animalia, by = join_by(dive_number)) |> 
-  dplyr::mutate(Unidentified_Biota = replace_na(Unidentified_Biota, 0)) |> 
+  dplyr::left_join(unidentified_animalia, by = dplyr::join_by(dive_number)) |> 
+  dplyr::mutate(Unidentified_Biota = tidyr::replace_na(Unidentified_Biota, 0)) |> 
   dplyr::mutate(total_biota = phylum + Unidentified_Biota)
 
 #percentage of annotations flagged for review
