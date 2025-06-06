@@ -1,5 +1,5 @@
 ---
-title: "EX2104: 2021 North Atlantic Stepping Stones"
+title: "EX1803: Gulf of Mexico"
 format:
   docx: 
     reference-doc: 2025_OER_for-quarto.docx
@@ -11,10 +11,10 @@ editor: visual
 #| output: false
 
 #set expedition information to use throughout document
-expedition_name <- "EX2104"
-expedition_title <- "North Atlantic Stepping Stones"
-annotations_date <- "October 21, 2024"
-UCH_dives <- 0
+expedition_name <- "EX1803"
+expedition_title <- "Gulf of Mexico"
+annotations_date <- "November 1, 2024"
+UCH_dives <- 2
 
 #libraries
 library(readr)
@@ -163,7 +163,7 @@ This report was generated using annotations downloaded from SeaTube on `r annota
 
 # Expedition Summary
 
-`r expedition_name` consisted of `r total_dive_count` total dives`r if(UCH_dives > 0){paste0(", of which ", UCH_dives, " dives explored maritime heritage sites and the remaining ", science_dive_count, " dives explored the benthos and water column")} else{" which explored the benthos and water column."}` ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. ROV distance traveled ranged from `r distance_min` meters to `r distance_max` meters with a median distance traveled of `r distance_median` meters. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
+`r expedition_name` consisted of `r total_dive_count` total dives`r if(UCH_dives > 0){paste0(", of which ", UCH_dives, " dives explored maritime heritage sites and the remaining ", science_dive_count, " dives explored the benthos and water column.")} else{" which explored the benthos and water column."}` ROV time on bottom ranged from `r bottom_min` to `r bottom_max` hours with a median of `r bottom_median` hours across all dives. ROV distance traveled ranged from `r distance_min` meters to `r distance_max` meters with a median distance traveled of `r distance_median` meters. The shallowest dive had a mean depth of `r depth_min` meters, the deepest dive had a mean depth of `r depth_max` meters, and the median across all dives was `r depth_median` meters. The median number of geoform or substrate annotations was `r geo_sub_annotations_median`, and median number of benthic biological annotations was `r bio_annotations_median`.
 
 # Dive Summary Metrics
 
@@ -175,7 +175,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Hours") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -190,7 +190,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = distance_m)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Distance (m)") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -205,7 +205,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Depth (m)") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -222,42 +222,13 @@ ggplot(summary_statistics, aes(x = dive_number, y = total_biota)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
 ###### [Figure 4]{custom-style="Strong"}. Total biological annotations.
 
 The total number of benthic biological annotations (all phyla) for each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` annotations across all dives.
-
-```{r}
-#| echo: false
-
-# annotations_taxonomy <- summary_statistics |> 
-#   select("dive_number",total = "phylum","class","order","family","genus","species") |> 
-#   pivot_longer(total:species) |> 
-#   rename(taxonomic_level = name,
-#          annotation_count = value) |> 
-#   mutate(taxonomic_level = as.factor(taxonomic_level),
-#          dive_number = as.factor(dive_number)) |> 
-#   mutate(taxonomic_level = fct_relevel(taxonomic_level,
-#                                        c("total","class","order",
-#                                          "family","genus","species")))
-#View(annotations_taxonomy)
-
-# ggplot(annotations_taxonomy, aes(fill = taxonomic_level, 
-#                                  y = annotation_count,
-#                                  x = dive_number)) +
-#   geom_col(width = 1, position = "dodge2") +
-#   scale_fill_manual(values = c('#001489', '#153099', '#1d4aa8', '#1f64b8', '#1a7ec8', '#0099d8')) +
-#   #coord_flip() +
-#   labs(title = "Biological Annotations by Taxonomic Level", 
-#        x = "Dive Number", y = "Number of Annotations", fill = "Taxonomic Level") +
-#   OER_theme +
-#   theme(legend.position = "bottom",
-#         legend.title = element_text(family = "Calibri", color = "#003087", size = 10),
-#         legend.text = element_text(family = "Calibri", color = "#003087", size = 10))
-```
 
 ```{r}
 #| echo: false
@@ -323,7 +294,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Deep_sea_corals)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -338,7 +309,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -353,7 +324,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -368,7 +339,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -383,7 +354,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 ```
 
@@ -419,7 +390,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
   geom_col(fill = "#0085CA") +
   labs(x = "Dive Number", y = "Number of Annotations") +
   scale_x_continuous(n.breaks = nrow(summary_statistics)) +
-  coord_cartesian(xlim = c(1, nrow(summary_statistics))) +
+  coord_cartesian(xlim = c(1, max(summary_statistics$dive_number))) +
   OER_theme
 
 ```
