@@ -145,6 +145,8 @@ bottom_time_hours$bottom_time_hours <- as.numeric(bottom_time_hours$bottom_time_
 
 #calculate mean depth during ROV time on bottom
 mean_benthic_depth <- benthic_annotations |> 
+  dplyr::select(dive_number, depth_m) |> 
+  dplyr::filter(!is.na(depth_m)) |> 
   dplyr::group_by(dive_number) |> 
   dplyr::summarize(mean_depth = mean(depth_m))
 
