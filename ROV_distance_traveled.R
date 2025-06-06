@@ -17,8 +17,8 @@ lapply(function_names, source)
 #-------------------------------------------------------------------------------
 #set up steps
 #set file paths and data names that correspond to file names
-ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX1903L2/ROV_tracks/"
-expedition <- "EX1903L2"
+ROV_filepath <- "C:/Users/julie.rose/Documents/1-OER/Biodiversity/expeditions/EX2206/ROV_tracks/"
+expedition <- "EX2206"
 
 #location of the benthic times data frame that is an output of the 
 #Benthic_annotations_cleaning script. This contains start/end times for all dives
@@ -55,9 +55,10 @@ ROV_clean_df <- ROV_clean(ROV_import_df)
 ROV_join <- dplyr::left_join(ROV_clean_df, benthic_times,
                                   dplyr::join_by("dive_number" == "dive_number"))
 
-#filter for benthic part of dive
+#filter for benthic part of dive, remove NA
 ROV_benthic <- ROV_join |> 
-  dplyr::filter(UTC>=benthic_start & UTC<=benthic_end)
+  dplyr::filter(UTC>=benthic_start & UTC<=benthic_end) |> 
+  dplyr::filter(!is.na(latitude_dd))
 
 
 #-------------------------------------------------------------------------------
