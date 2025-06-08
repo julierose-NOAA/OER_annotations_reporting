@@ -1,5 +1,5 @@
 ---
-title: "EX1803: Gulf of Mexico"
+title: "EX2205: Voyage to the Ridge 2"
 format:
   docx: 
     reference-doc: 2025_OER_for-quarto.docx
@@ -11,13 +11,13 @@ editor: visual
 #| output: false
 
 #set expedition information to use throughout document
-expedition_name <- "EX1803"
-expedition_title <- "Gulf of Mexico"
-annotations_date <- "November 1, 2024"
-UCH_dive_count <- 2
-UCH_dive_text <- "Dives 1 and 2 were maritime heritage dives."
-midwater_count <- 0
-midwater_text <- 0
+expedition_name <- "EX2205"
+expedition_title <- "Voyage to the Ridge 2"
+annotations_date <- "October 10, 2024"
+UCH_dive_count <- 0
+UCH_dive_text <- 0
+midwater_count <- 1
+midwater_text <- "Dive 3 was a midwater-only dive."
 
 #libraries
 library(readr)
@@ -184,7 +184,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = bottom_time_hours)) +
 
 ###### [Figure 1]{custom-style="Strong"}. ROV time on bottom in hours.
 
-ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours during `r expedition_name` with a median time on bottom of `r bottom_median` hours. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+ROV time on bottom ranged from `r bottom_min` hours to `r bottom_max` hours during `r expedition_name` with a median time on bottom of `r bottom_median` hours. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -199,7 +199,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = distance_m)) +
 
 ###### [Figure 2]{custom-style="Strong"}. ROV distance traveled in meters during the benthic portion of each dive.
 
-ROV distance traveled ranged from `r distance_min` meters to `r distance_max` meters during `r expedition_name` with a median distance traveled of `r distance_median` meters. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+ROV distance traveled ranged from `r distance_min` meters to `r distance_max` meters during `r expedition_name` with a median distance traveled of `r distance_median` meters. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -214,7 +214,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = mean_depth)) +
 
 ###### [Figure 3]{custom-style="Strong"}. Mean ROV depth in meters during the benthic portion of each dive.
 
-The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives during `r expedition_name` had a median depth of `r depth_median` meters. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The shallowest dive during `r expedition_name` had a mean depth of `r depth_min`, and the deepest dive had a mean depth of `r depth_max`. Overall, dives during `r expedition_name` had a median depth of `r depth_median` meters. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 # Annotation Metrics
 
@@ -231,7 +231,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = total_biota)) +
 
 ###### [Figure 4]{custom-style="Strong"}. Total biological annotations.
 
-The total number of benthic biological annotations (all phyla) for each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The total number of benthic biological annotations (all phyla) for each dive during `r expedition_name` ranged from `r bio_annotations_min` to `r bio_annotations_max` with a median of `r bio_annotations_median` annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -256,7 +256,7 @@ ggplot(annotations_taxonomy_percentage, aes(x = taxonomic_level,
 
 ###### [Figure 5]{custom-style="Strong"}. Percentage of annotations identified to each taxonomic level
 
-One common problem in deep-sea biology is that many taxa observed in video can only be identified to high taxonomic levels, like phylum or class, and cannot be identified to lower taxonomic levels, such as genus or species. The figure above shows the percentage of biological annotations (all phyla) that could be identified to each taxonomic level, from class through species, for each dive during `r expedition_name`. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+One common problem in deep-sea biology is that many taxa observed in video can only be identified to high taxonomic levels, like phylum or class, and cannot be identified to lower taxonomic levels, such as genus or species. The figure above shows the percentage of biological annotations (all phyla) that could be identified to each taxonomic level, from class through species, for each dive during `r expedition_name`. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 Across all dives:
 
@@ -288,7 +288,7 @@ ggplot(phyla_frequency_percent_all, aes(fill = percent, x = dive_number, y = phy
 
 ###### [Figure 6]{custom-style="Strong"}. Phylum-level annotations and community composition
 
-Phyla annotated during `r expedition_name` varied by dive and are illustrated here using color intensity, which indicates the relative contribution of each phylum to the total benthic biological annotations for each dive. The most common phyla annotated during `r expedition_name` can be identified by examining the variation in color intensity across rows. The community composition annotated during `r expedition_name` can be compared across dives by examining the variation in color intensity across columns. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+Phyla annotated during `r expedition_name` varied by dive and are illustrated here using color intensity, which indicates the relative contribution of each phylum to the total benthic biological annotations for each dive. The most common phyla annotated during `r expedition_name` can be identified by examining the variation in color intensity across rows. The community composition annotated during `r expedition_name` can be compared across dives by examining the variation in color intensity across columns. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -303,7 +303,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Deep_sea_corals)) +
 
 ###### [Figure 7]{custom-style="Strong"}. Total deep-sea coral annotations.
 
-Deep-sea corals provide benthic structure and are of interest due to their status as vulnerable marine ecosystems. For more information, the [NOAA Deep-Sea Coral Research and Technology Program](https://deepseacoraldata.noaa.gov/about/program) is dedicated to increasing scientific understanding of deep-sea coral and sponge ecosystems. The total number of deep-sea corals annotated during each dive of `r expedition_name` ranged from `r deep_sea_corals_min` to `r deep_sea_corals_max` with a median of `r deep_sea_corals_median` deep-sea corals annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+Deep-sea corals provide benthic structure and are of interest due to their status as vulnerable marine ecosystems. For more information, the [NOAA Deep-Sea Coral Research and Technology Program](https://deepseacoraldata.noaa.gov/about/program) is dedicated to increasing scientific understanding of deep-sea coral and sponge ecosystems. The total number of deep-sea corals annotated during each dive of `r expedition_name` ranged from `r deep_sea_corals_min` to `r deep_sea_corals_max` with a median of `r deep_sea_corals_median` deep-sea corals annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -318,7 +318,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Porifera)) +
 
 ###### [Figure 8]{custom-style="Strong"}. Total Porifera annotations.
 
-The phylum Porifera includes sponges. The total number of porifera annotated during each dive of `r expedition_name` ranged from `r porifera_min` to `r porifera_max` with a median of `r porifera_median` porifera annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The phylum Porifera includes sponges. The total number of porifera annotated during each dive of `r expedition_name` ranged from `r porifera_min` to `r porifera_max` with a median of `r porifera_median` porifera annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -333,7 +333,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Echinodermata)) +
 
 ###### [Figure 9]{custom-style="Strong"}. Total Echinodermata annotations.
 
-The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including sea stars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms annotated during each dive of `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max` with a median of `r echinodermata_median` echinoderm annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The phylum Echinodermata includes a variety of invertebrates common to the deep sea, including sea stars (Class: Asteroidea), brittle stars (Class: Ophiuroidea), crinoids (Class: Crinoidea), sea urchins (Class: Echinoidea), and sea cucumbers (Class: Holothuroidea). The total number of echinoderms annotated during each dive of `r expedition_name` ranged from `r echinodermata_min` to `r echinodermata_max` with a median of `r echinodermata_median` echinoderm annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -348,7 +348,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = Vertebrata)) +
 
 ###### [Figure 10]{custom-style="Strong"}. Total Vertebrata annotations.
 
-The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates annotated during each dive of `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max` with a median of `r vertebrata_median` vertebrate annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The subphylum Vertebrata contains all vertebrates within the phylum Chordata. Commonly observed vertebrates include fishes. The total number of vertebrates annotated during each dive of `r expedition_name` ranged from `r vertebrata_min` to `r vertebrata_max` with a median of `r vertebrata_median` vertebrate annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -363,7 +363,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = geoform_or_substrate)) +
 
 ###### [Figure 11]{custom-style="Strong"}. Total geoform or substrate annotations.
 
-The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with a median of `r geo_sub_annotations_median` annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The number of geoform and substrate annotations within each dive during `r expedition_name` ranged from `r geo_sub_annotations_min` to `r geo_sub_annotations_max` with a median of `r geo_sub_annotations_median` annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 # Quality control metrics
 
@@ -384,7 +384,7 @@ ggplot(summary_statistics, aes(x = dive_number, y = percent_flagged)) +
 
 ###### [Figure 12]{custom-style="Strong"}. Percentage of annotations flagged for review.
 
-The percentage of annotations flagged for review for each dive of `r expedition_name` ranged from `r percent_flagged_min` to `r percent_flagged_max` with a median of `r percent_flagged_median` annotations flagged for review across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The percentage of annotations flagged for review for each dive of `r expedition_name` ranged from `r percent_flagged_min` to `r percent_flagged_max` with a median of `r percent_flagged_median` annotations flagged for review across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
 
 ```{r}
 #| echo: false
@@ -400,4 +400,4 @@ ggplot(summary_statistics, aes(x = dive_number, y = Unidentified_Biota)) +
 
 ###### [Figure 13]{custom-style="Strong"}. Number of unidentified biological annotations.
 
-The number of annotations that were identified as being biological, but without an associated phylum-level identification during `r expedition_name` ranged from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` unidentified biological annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text")} else{""}`
+The number of annotations that were identified as being biological, but without an associated phylum-level identification during `r expedition_name` ranged from `r unID_bio_min` to `r unID_bio_max` with a median of `r unID_bio_median` unidentified biological annotations across all dives. `r if(UCH_dive_count > 0){UCH_dive_text} else{""}` `r if(midwater_count > 0){midwater_text} else{""}`
